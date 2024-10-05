@@ -1,0 +1,19 @@
+@font-face {
+  font-family: 'Vesterbro';
+	src: url('fonts/TRYVesterbro-Regular.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+  font-family: 'Vesterbro', sans-serif;
+}
+
+header, main, footer {
+  margin: 0;
+	padding: 1rem;
+}

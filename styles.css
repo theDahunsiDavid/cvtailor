@@ -5,15 +5,60 @@
 	font-style: normal;
 }
 
+@font-face {
+  font-family: 'Vesterbro';
+	src: url('fonts/TRYVesterbro-Extrabold.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
 }
 
 h1 {
   font-family: 'Vesterbro', sans-serif;
+	font-size: 46px;
+	font-weight: 700;
+	line-height: 44px;
+}
+
+h2 {
+  font-family: 'Vesterbro', sans-serif
+	font-size: 36px;
+	font-weight: 700;
+	line-height: 44px;
 }
 
 header, main, footer {
   margin: 0;
 	padding: 1rem;
+}
+
+#floating-bar {
+  position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #f8f9fa;
+	padding: 10px;
+	text-align: center;
+	box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+}
+
+#logo {
+  height: auto;
+	max-width: 150px;
+	display: block;
+	margin: 0;
+	float: left;
+}
+
+header {
+  overflow: hidden;
+	padding: 1rem;
+}
+
+#user-menu {
+  float: right;
 }

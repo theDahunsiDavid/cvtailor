@@ -16,7 +16,7 @@ body {
 	padding: 30px;
   font-family: 'Roboto', sans-serif;
 	font-size: 12px;
-	font-weight: 200;
+	font-weight: 400;
 	line-height: 18px;
 }
 
@@ -44,7 +44,7 @@ input {
 
 main, footer {
   margin: 0;
-	padding: 1rem;
+	padding: 0px;
 }
 
 /* Floating bar at bottom of page to drive signups. */
@@ -65,7 +65,7 @@ header {
   height: 22px;
 	line-height: 22px;
   overflow: hidden;
-	padding: 0px 16px 18px 16px;
+	padding: 0px 0px 18px 0px;
 }
 
 #logo {

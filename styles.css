@@ -1,19 +1,23 @@
 @font-face {
   font-family: 'Vesterbro';
 	src: url('fonts/TRYVesterbro-Regular.otf') format('opentype');
-	font-weight: normal;
+	font-weight: 400;
 	font-style: normal;
 }
 
 @font-face {
   font-family: 'Vesterbro';
 	src: url('fonts/TRYVesterbro-Extrabold.otf') format('opentype');
-	font-weight: normal;
+	font-weight: 700;
 	font-style: normal;
 }
 
 body {
+	padding: 30px;
   font-family: 'Roboto', sans-serif;
+	font-size: 12px;
+	font-weight: 200;
+	line-height: 18px;
 }
 
 h1 {
@@ -21,13 +25,21 @@ h1 {
 	font-size: 46px;
 	font-weight: 700;
 	line-height: 44px;
+	margin-bottom: 0px;
 }
 
 h2 {
-  font-family: 'Vesterbro', sans-serif
+  font-family: 'Vesterbro', sans-serif;
 	font-size: 36px;
 	font-weight: 700;
 	line-height: 44px;
+}
+
+button,
+textarea,
+textarea::placeholder,
+input {
+  font-family: 'Roboto', sans-serif;
 }
 
 header, main, footer {
@@ -35,20 +47,24 @@ header, main, footer {
 	padding: 1rem;
 }
 
-#floating-bar {
-  position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	background-color: #f8f9fa;
-	padding: 10px;
-	text-align: center;
-	box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-}
+/* Floating bar at bottom of page to drive signups. */
+/* #floating-bar { */
+/*   position: fixed; */
+/* 	bottom: 0; */
+/* 	left: 0; */
+/* 	right: 0; */
+/* 	background-color: #f8f9fa; */
+/* 	padding: 10px 50px; */
+/* 	box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1); */
+/* 	display: flex; */
+/* 	justify-content: space-between; */
+/* 	align-items: center; */
+/* } */
 
 #logo {
-  height: auto;
-	max-width: 150px;
+	width: 80px;
+	max-width: 80px;
+	height: auto;
 	display: block;
 	margin: 0;
 	float: left;
@@ -59,6 +75,85 @@ header {
 	padding: 1rem;
 }
 
+footer {
+  text-align: right;
+}
+
 #user-menu {
   float: right;
+}
+
+.header-text {
+  margin-bottom: 40px;
+}
+
+/* Styling for upload, job description area */
+
+#cv-upload {
+	min-width: 250px;
+	margin-bottom: 10px;
+}
+
+#job-description {
+	min-width: 250px;
+	margin-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+	padding: 10px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+}
+
+/* Give file upload area same style as text area w/out width. */
+/* input[type="file"] { */
+/* 	padding: 10px; */
+/* 	border-radius: 5px; */
+/* 	border: 1px solid #ccc; */
+/* 	box-sizing: border-box; */
+/* } */
+
+/* Buttons styling */
+
+#loginBtn {
+  background-color: white;
+	color: black;
+	border: 1px solid black;
+	padding: 10px 15px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+#signupBtn {
+  background-color: black;
+	color: white;
+	border: 1px solid black;
+	padding: 10px 15px;
+	border-radius: 5px;
+	cursor: pointer;
+	margin-left: 10px;
+}
+
+#tailorCV {
+  background-color: #FFEA00; /* Bright Yellow */
+	color: black;
+	border: 1px solid black;
+	padding: 10px 15px;
+	border-radius: 5px;
+	cursor: pointer;
+	margin-bottom: 30px;
+}
+
+#loginBtn:hover {
+  background-color: #F0F0F0;
+}
+
+#signupBtn:hover {
+  background-color: #444;
+}
+
+#tailorCV:hover {
+  background-color: #E4D00A /* Citrine yellow */
 }

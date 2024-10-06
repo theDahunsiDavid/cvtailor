@@ -13,7 +13,7 @@
 	<body>
 		<!-- Navigation/header section -->
     <header>
-			<img src="cvtailor-logo.png" alt="CV Tailor Logo" id="logo" />
+			<img src="cvtailor-logo2.png" alt="CV Tailor Logo" id="logo" />
 			<div id="user-menu">
 				<button id="loginBtn">Log In</button>
 				<button id="signupBtn">Sign Up</button>
@@ -28,16 +28,23 @@
 
 		<!-- Main content section -->
     <main>
-			<h1>Tailor your CV for any job with ease!</h1>
-      <section id="cv-upload">
-        <h2>Upload Your CV</h2>
-				<input type="file" id="cvInput" accept=".pdf, .doc, .docx" />
-			</section>
+			<div class="top-text">
+				<h1>Tailor your CV<br>for any job with ease!</h1>
+				<p>An ATS-optimized CV, tailored just for you.</p>
+			</div>
 
-			<section id="job-description">
-        <h2>Paste Job Description</h2>
-				<textarea id="jobDescription" rows="10" placeholder="Paste the job description here..."></textarea>
-			</section>
+			<!-- Container for two columns -->
+			<div class="two-columns">
+				<section id="cv-upload">
+					<!-- <h2>Upload Your CV</h2> -->
+					<input type="file" id="cvInput" accept=".pdf, .doc, .docx" />
+				</section>
+
+				<section id="job-description">
+					<!-- <h2>Paste Job Description</h2> -->
+					<textarea id="jobDescription" rows="10" placeholder="Paste the job description here..."></textarea>
+				</section>
+			</div>
 
 			<section id="tailor-cv">
 				<button id="tailorCV" onclick="window.location.href='preview.html';">Tailor My CV</button>
@@ -46,7 +53,7 @@
 
 		<!-- Footer section -->
 		<footer>
-			<p>&copy: 2024 CV Tailor. All rights reserved.</p>
+			<p>© 2024 CV Tailor. All rights reserved.</p>
 		</footer>
 
 		<!-- Javascript section -->

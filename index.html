@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
+	<head>
+		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>CV Tailor</title>
@@ -12,7 +12,7 @@
 
 	<body>
 		<!-- Navigation/header section -->
-    <header>
+		<header>
 			<img src="cvtailor-logo2.png" alt="CV Tailor Logo" id="logo" />
 			<div id="user-menu">
 				<button id="loginBtn">Log In</button>
@@ -27,7 +27,7 @@
 		<!-- </div> -->
 
 		<!-- Main content section -->
-    <main>
+		<main>
 			<div class="header-text">
 				<h1>Tailor your CV<br>for any job with ease!</h1>
 				<p>An ATS-optimized CV, tailored just for you.</p>
@@ -74,9 +74,41 @@
 				<div class="google-signup">
 					<button id="google-signup-btn">Sign up with Google</button>
 				</div>
-				<p>Already have an account? <a href="login.html">Log in here</a></p>
+				<p>Already have an account? <a href="#" onclick="openLoginModal()">Log in here</a></p>
 			</div>
 		</div>
+
+		<! -- Login pop-over division -->
+		<div id="login-modal" class="modal">
+			<div class="modal-content">
+				<span class="close-button">&times;</span>
+				<h2>Log In</h2>
+				<form id="login-form">
+					<label for="email">Email:</label>
+					<input type="email" id="email" name="email" autocomplete="on" required>
+
+					<label for="password">Password:</label>
+					<input type="password" id="password" name="password" required>
+
+					<label>
+						<input type="checkbox" id="keep-logged-in" name="keep-logged-in">
+							Keep me logged in
+					</label>
+
+					<button type="submit">Log In Now</button>
+				</form>
+
+				<div class="google-login">
+					<button id="google-login-btn">Sign in with Google</button>
+				</div>
+
+				<!-- "Forgot your password?" link -->
+				<p><a href="forgot-password.html">Forgot your password?</a></p>
+
+				<p>Don't have an account yet? <a href="#" onclick="openSignupModal()">Sign up now</a></p>
+			</div>
+		</div>
+
 
 		<!-- Javascript section -->
 		<script src="script.js"></script>

@@ -110,6 +110,12 @@ textarea {
 	box-sizing: border-box;
 }
 
+@media (max-width: 1024px) {
+  body {
+		font-size: 16px;
+		line-height: 21px;
+	}
+}
 /* Give file upload area same style as text area w/out width. */
 /* input[type="file"] { */
 /* 	padding: 10px; */

@@ -46,17 +46,22 @@
 			</section>
 		</main>
 
+		<!-- Footer section -->
+		<footer>
+			<p>© 2024 CV Tailor. All rights reserved.</p>
+		</footer>
+
 		<! -- Signup pop-over division -->
 		<div id="signup-modal" class="modal">
 			<div class="modal-content">
 				<span class="close-button">&times;</span>
 				<h2>Create Your Account</h2>
 				<form id="signup-form">
-					<label for="email">Email:</label>
-					<input type="email" id="email" name="email" autocomplete="on" required>
+					<label for="signup-email">Email:</label>
+					<input type="email" id="signup-email" name="signup-email" autocomplete="on" required>
 
-					<label for="password">Password:</label>
-					<input type="password" id="password" name="password" required>
+					<label for="signup-password">Password:</label>
+					<input type="password" id="signup-password" name="signup-password" required>
 
 					<label for="confirm-password">Repeat Password:</label>
 					<input type="password" id="confirm-password" name="confirm-password" required>
@@ -66,14 +71,40 @@
 				<div class="google-signup">
 					<button id="google-signup-btn">Sign up with Google</button>
 				</div>
-				<p>Already have an account? <a href="login.html">Log in here</a></p>
+				<p>Already have an account? <a href="#" onclick="openLoginModal()">Log in here</a></p>
 			</div>
 		</div>
 
-		<!-- Footer section -->
-		<footer>
-			<p>© 2024 CV Tailor. All rights reserved.</p>
-		</footer>
+		<! -- Login pop-over division -->
+		<div id="login-modal" class="modal">
+			<div class="modal-content">
+				<span class="close-button">&times;</span>
+				<h2>Log In</h2>
+				<form id="login-form">
+					<label for="login-email">Email:</label>
+					<input type="email" id="login-email" name="login-email" autocomplete="on" required>
+
+					<label for="login-password">Password:</label>
+					<input type="password" id="login-password" name="login-password" required>
+
+					<label>
+						<input type="checkbox" id="keep-logged-in" name="keep-logged-in">
+							Keep me logged in
+					</label>
+
+					<button type="submit">Log In Now</button>
+				</form>
+
+				<div class="google-login">
+					<button id="google-login-btn">Sign in with Google</button>
+				</div>
+
+				<!-- "Forgot your password?" link -->
+				<p><a href="forgot-password.html">Forgot your password?</a></p>
+
+				<p>Don't have an account yet? <a href="#" onclick="openSignupModal()">Sign up now</a></p>
+			</div>
+		</div>
 
 		<!-- Javascript section -->
 		<script src="script.js"></script>

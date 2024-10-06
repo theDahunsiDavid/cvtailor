@@ -12,31 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	const loginBtn = document.getElementById('loginBtn');
 	const signupModal = document.getElementById('signup-modal');
 	const loginModal = document.getElementById('login-modal');
-	const span = document.getElementsByClassName('close-button')[0];
+	const signupClose = signupModal.querySelector('.close-button');
+	const loginClose = loginModal.querySelector('.close-button');
 
 	if (signupBtn) {
 		signupBtn.onclick = function() {
 			signupModal.style.display = 'block';
 		};
-	}
-
-	if (signupModal && span) {
-		span.onclick = function () {
-			signupModal.style.display = 'none';
-		}
-
-		window.onclick = function(event) {
-			if (event.target == signupModal) {
-				signupModal.style.display = 'none';
-			}
-		}
-
-		document.getElementById("signup-form").onsubmit = function(e) {
-			e.preventDefault();
-
-			// Signup logic to send data to server/database
-			window.location.href = document.referrer;
-		}
 	}
 
 	if (loginBtn) {
@@ -45,22 +27,41 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 	}
 
-	if (loginModal && span) {
-		span.onclick = function () {
-			loginModal.style.display = 'none';
-		}
+	if (signupModal && signupClose) {
+		signupClose.onclick = function () {
+			signupModal.style.display = 'none';
+		};
 
-		window.onclick = function(event) {
+		window.addEventListener('click', function(event) {
+			if (event.target == signupModal) {
+				signupModal.style.display = 'none';
+			}
+		});
+	}
+
+	if (loginModal && loginClose) {
+		loginClose.onclick = function () {
+			loginModal.style.display = 'none';
+		};
+
+		window.addEventListener('click', function(event) {
 			if (event.target == loginModal) {
 				loginModal.style.display = 'none';
 			}
-		}
-
-		document.getElementById("login-form").onsubmit = function(e) {
-			e.preventDefault();
-
-			// Signup logic to send data to server/database
-			window.location.href = document.referrer;
-		}
+		});
 	}
+
+	document.getElementById("signup-form").onsubmit = function(e) {
+		e.preventDefault();
+
+		// Signup logic to send data to server/database
+		window.location.href = document.referrer;
+	}
+
+	document.getElementById("login-form").onsubmit = function(e) {
+		e.preventDefault();
+
+		// Signup logic to send data to server/database
+		window.location.href = document.referrer;
+	};
 });

@@ -1,9 +1,11 @@
 // Sign up page dynamic interactions
 function openSignupModal() {
+	document.getElementById("login-modal").style.display = "none";
   document.getElementById("signup-modal").style.display = "block";
 }
 
 function openLoginModal() {
+	document.getElementById("signup-modal").style.display = "none";
   document.getElementById("login-modal").style.display = "block";
 }
 

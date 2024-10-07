@@ -37,17 +37,17 @@
 
 			  <section id="cv-upload">
 				  <!-- <h2>Upload Your CV</h2> -->
-				  <input type="file" id="cvInput" accept=".pdf, .doc, .docx" />
+				  <input type="file" name="uploaded_file" id="cvInput" accept=".pdf, .doc, .docx" required />
 			  </section>
 
 			  <section id="job-description">
 				  <!-- <h2>Paste Job Description</h2> -->
-				  <textarea id="jobDescription" rows="10" placeholder="Paste the job description here..."></textarea>
+				  <textarea name="job_description" id="jobDescription" rows="10" placeholder="Paste the job description here..." required></textarea>
 			  </section>
 			  </div>
 
 			  <section id="tailor-cv">
-				  <button id="tailorCV" onclick="window.location.href='preview.html';">Tailor My CV</button>
+				  <button type="submit" id="tailorCV" onclick="window.location.href='preview.html';">Tailor My CV</button>
 			  </section>
 		  </main>
     </form>

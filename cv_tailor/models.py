@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Module to store uploaded file & job description."""
+"""Module to create the job application model."""
 from django.db import models
 
 

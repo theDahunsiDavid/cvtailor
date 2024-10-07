@@ -29,6 +29,7 @@
 		<!-- Main content section -->
     <form action="{% url 'upload_view' %}" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
+      {{ form.as_p }}
       <main>
 			  <div class="header-text">
 				  <h1>Tailor your CV<br>for any job with ease!</h1>

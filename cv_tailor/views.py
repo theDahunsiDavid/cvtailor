@@ -30,3 +30,16 @@ def upload_view(request):
         form = JobApplicationForm()
 
     return render(request, 'index.html', {'form': form})
+
+
+def home_view(request):
+    """
+    Renders the home page with the CV upload form.
+
+    Args:
+        request: the HTTP request object.
+
+    Returns:
+        The rendered HTML page for the home view.
+    """
+    return render(request, 'index.html')

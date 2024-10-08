@@ -28,7 +28,7 @@
 		<!-- </div> -->
 
 		<!-- Main content section -->
-    <form method="POST" enctype="multipart/form-data" action="{% url 'upload_view' %}">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'upload_cv' %}">
       {% csrf_token %}
       {{ form.as_p }}
       <main>

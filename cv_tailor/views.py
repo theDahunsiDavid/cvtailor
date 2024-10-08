@@ -32,7 +32,7 @@ def upload_view(request):
     return render(request, 'index.html', {'form': form})
 
 
-def home_view(request):
+def index(request):
     """
     Renders the home page with the CV upload form.
 

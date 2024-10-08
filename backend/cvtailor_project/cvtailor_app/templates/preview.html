@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Sections</title>
+</head>
+<body>
+    <h1>Extracted CV Sections</h1>
+    {% for section, content in sections.items %}
+        <h2>{{ section }}</h2>
+        <p>{{ content }}</p>
+    {% endfor %}
+</body>
+</html>

@@ -27,31 +27,27 @@
 		<!-- </div> -->
 
 		<!-- Main content section -->
-    <form action="{% url 'upload_view' %}" method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <main>
-			  <div class="header-text">
-				  <h1>Tailor your CV<br>for any job with ease!</h1>
-				  <p>An ATS-optimized CV, tailored just for you.</p>
-			  </div>
+    <main>
+			<div class="header-text">
+				<h1>Tailor your CV<br>for any job with ease!</h1>
+				<p>An ATS-optimized CV, tailored just for you.</p>
+			</div>
 
-			  <section id="cv-upload">
-				  <!-- <h2>Upload Your CV</h2> -->
-				  <input type="file" name="uploaded_file" id="cvInput" accept=".pdf, .doc, .docx" required />
-			  </section>
+			<section id="cv-upload">
+				<!-- <h2>Upload Your CV</h2> -->
+				<input type="file" name="uploaded_file" id="cvInput" accept=".pdf, .doc, .docx" required />
+			</section>
 
-			  <section id="job-description">
-				  <!-- <h2>Paste Job Description</h2> -->
-				  <textarea name="job_description" id="jobDescription" rows="10" placeholder="Paste the job description here..." required></textarea>
-			  </section>
-			  </div>
+			<section id="job-description">
+				<!-- <h2>Paste Job Description</h2> -->
+				<textarea name="job_description" id="jobDescription" rows="10" placeholder="Paste the job description here..." required></textarea>
+			</section>
+			</div>
 
-			  <section id="tailor-cv">
-				  <button type="submit" id="tailorCV">Tailor My CV</button>
-			  </section>
-		  </main>
-    </form>
+			<section id="tailor-cv">
+				<button type="submit" id="tailorCV">Tailor My CV</button>
+			</section>
+		</main>
 
 		<!-- Footer section -->
 		<footer>

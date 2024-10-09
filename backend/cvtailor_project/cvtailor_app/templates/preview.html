@@ -3,13 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV Sections</title>
+    <title>CV Preview</title>
+    <!-- Quill CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
 </head>
 <body>
-    <h1>Extracted CV Sections</h1>
-    {% for section, content in sections.items %}
-        <h2>{{ section }}</h2>
-        <p>{{ content }}</p>
-    {% endfor %}
+    <h1>Preview Your CV</h1>
+    <p>Download it in any format whatn you're ready.</p>
+
+    <!-- Text editor container for all sections -->
+    <div id="editor-container"></div>
+
+    <!-- Quill JS -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+    <!-- Initialize Quill editor -->
+    <script>
+      var quill = new Quill('#editor-container', {
+          theme: 'snow',
+          readOnly: false,
+      });
+
+      // Combine all sections into one string
+      var combinedSections = "";
+      {% for section, content in sections.items %}
+        combinedSections += "<h2>{{ section }}</h2><p>{{ content|escapejs }}</p>";
+      {% endfor %}
+
+      // Set the combined content in the editor
+      quill.clipboard.dangerouslyPasteHTML(0, combinedSections);
+    </script>
 </body>
 </html>

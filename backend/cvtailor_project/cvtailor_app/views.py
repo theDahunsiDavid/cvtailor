@@ -50,6 +50,6 @@ def extract_sections(text):
                 sections[current_section].append(line.strip())
 
     for section in sections:
-        sections[section] = '\n'.join(sections[section])
+        sections[section] = '.<br>'.join(sections[section])
 
     return sections

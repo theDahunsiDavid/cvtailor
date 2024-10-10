@@ -27,7 +27,7 @@
       // Combine all sections into one string
       var combinedSections = "";
       {% for section, content in sections.items %}
-        combinedSections += "<h2>{{ section }}</h2><p>{{ content|escapejs }}</p>";
+      combinedSections += "{{ content|escapejs|safe }}";
       {% endfor %}
 
       // Set the combined content in the editor

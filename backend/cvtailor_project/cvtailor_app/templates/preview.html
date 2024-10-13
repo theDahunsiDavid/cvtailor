@@ -6,32 +6,119 @@
     <title>CV Preview</title>
     <!-- Quill CSS -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+    <style>
+        #content-container {
+            display: flex;
+            height: 100vh;
+        }
+        #editor-container {
+            flex: 3;
+            margin-right: 20px;
+        }
+        #job-description-container {
+            flex: 1;
+            padding-left: 20px;
+            border-left: 1px solid #ccc;
+        }
+        #job-description-editor{
+          height: 40%;
+          overflow-y: auto;
+        }
+        /* Hide any unwanted toolbar by default
+        .ql-toolbar {
+          display: none;
+        } */
+    </style>
 </head>
 <body>
     <h1>Preview Your CV</h1>
     <p>Download it in any format when you're ready.</p>
 
-    <!-- Text editor container for all sections -->
-    <div id="editor-container"></div>
+    <!-- Container for CV content and job description -->
+    <div id="content-container">
+        <!-- Quill Text editor container for CV content -->
+        <div id="editor-container">
+            <div id="quill-editor"></div> <!-- Target only this for Quill -->
+        </div>
+
+        <!-- Job description container -->
+        <div id="job-description-container">
+            <h2>Job Description</h2>
+            <div id="job-description-editor"></div>
+            <section id="tailor-cv">
+              <button id="tailorCV">Tailor My CV</button>
+            </section>
+        </div>
+    </div>
 
     <!-- Quill JS -->
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
     <!-- Initialize Quill editor -->
     <script>
-      var quill = new Quill('#editor-container', {
-          theme: 'snow',
-          readOnly: false,
+      // Initialize Quill for CV content
+      var quill = new Quill('#quill-editor', {
+          theme: 'snow', // Include the toolbar
+          readOnly: false
       });
 
-      // Combine all sections into one string
+      // Combine all sections into one string for CV content
       var combinedSections = "";
       {% for section, content in sections.items %}
       combinedSections += "{{ content|escapejs|safe }}";
       {% endfor %}
 
-      // Set the combined content in the editor
+      // Set the combined content in the CV editor
       quill.clipboard.dangerouslyPasteHTML(0, combinedSections);
+
+      // Initialize Quill for Job Description
+      var jobDescriptionEditor = new Quill('#job-description-editor', {
+          theme: 'snow', // With toolbar
+          readOnly: false
+      });
+
+      // Set the job description content
+      var jobDescription = "{{ job_description|escapejs|safe }}";
+
+      // Function to format job description
+      function formatJobDescription(description) {
+          return description.replace(/  /g, '&nbsp;&nbsp;').replace(/\n/g, '<br>');
+      }
+
+      // Set the job description content
+      var jobDescription = formatJobDescription("{{ job_description|escapejs|safe }}");
+      jobDescriptionEditor.clipboard.dangerouslyPasteHTML(0, jobDescription);
     </script>
+
+    <script>
+    document.getElementById('tailorCV').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Get CV content from Quill editor
+        var cvContent = quill.root.innerHTML;
+        // Get job description from Quill editor or other sources
+        var jobDescription = document.getElementById('job-description-editor').innerHTML;
+
+        // Send the CV and job description to the server
+        fetch('/convert_ats/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: new URLSearchParams({
+                'cv_content': cvContent,
+                'job_description': jobDescription
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Display the ATS CV content in the Quill editor
+            quill.clipboard.dangerouslyPasteHTML(0, data.ats_cv_content);
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
 </body>
 </html>
+

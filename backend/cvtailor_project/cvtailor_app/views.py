@@ -4,6 +4,7 @@ import re
 from openai import OpenAI
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 from .models import JobApplication
 from .forms import JobApplicationForm
 
@@ -84,9 +85,13 @@ def convert_to_ats_format(request):
             job_description = request.POST.get("job_description")
 
             # Generate ATS-friendly content using OpenAI
-            ats_cv_content = generate_ats_format_and_match_score(cv_content, job_description)
+            ats_cv_content, match_score, suggestions = generate_ats_format_and_match_score(cv_content, job_description)
 
-            return JsonResponse({ "ats_cv_content": ats_cv_content})
+            return JsonResponse({
+                "ats_cv_content": ats_cv_content,
+                "match_score": match_score,
+                "suggestions": suggestions
+                })
 
         except Exception as e:
             return JsonResponse({'error': f"An error occurred: {str(e)}"}, status=500)
@@ -96,17 +101,22 @@ def generate_ats_format_and_match_score(cv_content, job_description):
     try:
         # Create a prompt for OpenAI
         prompt = (
-            f"Convert the following CV content to an ATS-friendly format."
-            f"Please format each job entry as 'Company Name (Position) [Date Range]'. "
-            f"Rename the non-standard titles (e.g., PROFILE SUMMARY) for each sections to standard, clear section headings like PROFESSIONAL SUMMARY, WORK EXPERIENCE, SKILLS, EDUCATION, etcetera."
-            f"Rearrange the sections in order of priority for ATS systems."
-            f"Format the section titles as simple headings."
+            f"Convert the following CV content to an ATS-friendly format as possible without removing personal data like name, address, email, contact info, and other identifying details that would normally not be in an ATS-friendly CV. Let there be no omissions or missing parts, meaning do not remove any sections containing personal information or contact information.\n"
+            f"Section titles/headings in the CV content are in all-caps. Separate all sections with an empty line only, not with commas or separators. All sections in CV content must be present in the ATS-friendly format, including all responsibilities under each work experience entry. Ensure no sections or responsibilities are missing in the ATS-friendly format.\n"
+            f"Do NOT remove a section because its title/heading is a non-standard title. However, where you can, rename the non-standard titles (e.g., PROFILE SUMMARY) for each section to standard, clear section headings like PROFESSIONAL SUMMARY, WORK EXPERIENCE, SKILLS, EDUCATION, etc.\n"
+            f"Do not separate sections with '---' or the likes."
+            f"Do not end your response with '---' or the likes."
+            f"Format each job entry as 'Company Name (Position) [Date Range]' and include a bullet point list of responsibilities under each position.\n"
+            f"Format the WORK EXPERIENCE section in reverse-chronological order.\n"
+            f"Use simple headings for section titles, and ensure all sections are clearly separated without unnecessary commas or separators.\n"
             f"Format the WORK EXPERIENCE section in reverse-chronological format."
-            f"Avoid unnecessary commas and ensure each section is clearly separated.\n\n"
+            f"Include a Match Score (out of 100) that indicates how closely the CV matches the job description as exactly 'Match Score: X/100' where X is the Match Score. Include suggestions to improve the Match Score as 'Suggestions to improve Match Score: X'.\n"
+            f"Make sure to check your response or the ATS-friendly content for typos and fix the typos.\n"
+            f"Double-check that all sections and responsibilities from the original CV are included in your response.\n\n"
             f"CV Content: {cv_content}\n\n"
             f"Job Description: {job_description}\n\n"
-            f"Additionally, provide a match score (out of 100) that indicates how closely the CV matches the job description."
-        )
+)
+
 
         # Call OpenAI API to generate ATS content
         response = client.chat.completions.create(
@@ -116,8 +126,20 @@ def generate_ats_format_and_match_score(cv_content, job_description):
             ]
         )
 
+        # Print the raw response for debugging
+        # print("OpenAI Response:", response)
+
         # Extract ATS content from the response
         ats_content = response.choices[0].message.content
+        suggestions = extract_suggestions(ats_content)  # Function to extract suggestions from the response
+
+        # Assuming the match score is provided as a number at the end of the content
+        match_score_match = re.search(r'Match Score:\s*(\d+)\s*/\s*100', ats_content, re.IGNORECASE)
+        if match_score_match:
+            match_score = match_score_match.group(1)  # Extract the match score
+            ats_content = ats_content[:match_score_match.start()].strip()  # Remove the score from the content
+        else:
+            match_score = "N/A"  # Fallback if no score is found
 
         # Apply formatting changes: replace asterisks with simple headings
         ats_content = apply_custom_formatting(ats_content)
@@ -125,12 +147,12 @@ def generate_ats_format_and_match_score(cv_content, job_description):
         # Apply basic formatting (e.g., replacing newlines with <br> for HTML display)
         formatted_ats_content = ats_content.replace("\n", "<br>")  # Convert newlines to <br> for HTML display
 
-        return formatted_ats_content
+        return formatted_ats_content, match_score, suggestions
 
     except Exception as e:
         # Handle any potential errors from OpenAI or the prompt
         print(f"Error generating ATS content and match score: {e}")
-        return "Error generating ATS content"
+        return "Error generating ATS content", "N/A"
 
 def apply_custom_formatting(content):
     """
@@ -151,3 +173,62 @@ def apply_custom_formatting(content):
     content = re.sub(r'\n\s*\n', '\n\n', content)  # Removes extra newlines but keeps paragraph spacing
 
     return content
+
+def extract_suggestions(ats_response):
+    # Example: Assuming the response contains a section with suggestions
+    suggestions_section = re.search(r'Suggestions to improve Match Score:(.*?)(?:\n\n|\Z)', ats_response, re.DOTALL | re.IGNORECASE)
+    if suggestions_section:
+        suggestions_text = suggestions_section.group(1).strip()
+        return suggestions_text.split("\n")  # Split suggestions into a list
+    return []
+
+@csrf_exempt  # Add CSRF exemption if needed
+def apply_suggestion(request):
+    """View to apply a suggestion to the current CV content."""
+    if request.method == "POST":
+        try:
+            # Extract current CV content and the suggestion from the request
+            cv_content = request.POST.get("cv_content")
+            suggestion = request.POST.get("suggestion")
+
+            # Apply the suggestion to the CV content
+            updated_cv_content = apply_suggestion_to_cv(cv_content, suggestion)
+
+            return JsonResponse({"updated_cv_content": updated_cv_content})
+
+        except Exception as e:
+            return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
+
+def apply_suggestion_to_cv(cv_content, suggestion):
+    """
+    Applies a specific suggestion to the CV content.
+
+    Args:
+        cv_content (str): The current CV content.
+        suggestion (str): The suggestion to be applied.
+
+    Returns:
+        str: The updated CV content after applying the suggestion.
+    """
+    try:
+        # Here, implement the logic to modify the CV based on the suggestion.
+        # You might want to use different rules based on the suggestion text.
+        # For example, replacing certain phrases, reformatting sections, etc.
+
+        # Placeholder logic for now:
+        if "add experience" in suggestion.lower():
+            # Example: Adding an experience section suggestion
+            cv_content += "<br><br><strong>Additional Experience:</strong> Suggested addition goes here."
+        elif "remove redundancy" in suggestion.lower():
+            # Example: Removing redundancy as a suggestion
+            cv_content = cv_content.replace("redundant phrase", "")
+
+        # Add more conditions based on the type of suggestions you receive
+        # ...
+
+        return cv_content
+
+    except Exception as e:
+        print(f"Error applying suggestion: {e}")
+        return cv_content  # Return unmodified content if there's an error
+

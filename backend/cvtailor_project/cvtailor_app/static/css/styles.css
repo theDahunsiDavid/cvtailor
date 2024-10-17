@@ -1,38 +1,38 @@
 @font-face {
   font-family: 'Vesterbro';
-	src: url('fonts/TRYVesterbro-Regular.otf') format('opentype');
-	font-weight: 400;
-	font-style: normal;
+  src: url('fonts/TRYVesterbro-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
 }
 
 @font-face {
   font-family: 'Vesterbro';
-	src: url('../fonts/TRYVesterbro-Extrabold.otf') format('opentype');
-	font-weight: 700;
-	font-style: normal;
+  src: url('../fonts/TRYVesterbro-Extrabold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
 }
 
 body {
-	padding: 30px;
+  padding: 30px;
   font-family: 'Roboto', sans-serif;
-	font-size: 12px;
-	font-weight: 400;
-	line-height: 18px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
 }
 
 h1 {
   font-family: 'Vesterbro', sans-serif;
-	font-size: 46px;
-	font-weight: 700;
-	line-height: 44px;
-	margin-bottom: 0px;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 44px;
+  margin-bottom: 0px;
 }
 
 h2 {
   font-family: 'Vesterbro', sans-serif;
-	font-size: 36px;
-	font-weight: 700;
-	line-height: 44px;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 44px;
 }
 
 button,
@@ -44,7 +44,7 @@ input {
 
 main, footer {
   margin: 0;
-	padding: 0px;
+  padding: 0px;
 }
 
 /* Floating bar at bottom of page to drive signups. */
@@ -63,25 +63,25 @@ main, footer {
 
 header {
   height: 22px;
-	line-height: 22px;
+  line-height: 22px;
   overflow: hidden;
-	padding: 0px 0px 18px 0px;
-	margin-bottom: 80px;
+  padding: 0px 0px 18px 0px;
+  margin-bottom: 80px;
 }
 
 #logo {
-	width: 80px;
-	max-width: 80px;
-	height: auto;
-	display: inline-block;
-	margin-top: 9px;
-	float: left;
+  width: 80px;
+  max-width: 80px;
+  height: auto;
+  display: inline-block;
+  margin-top: 9px;
+  float: left;
 }
 
 footer {
-	float: right;
-	margin-top: 50px;
-	margin-bottom: 30px;
+  float: right;
+  margin-top: 50px;
+  margin-bottom: 30px;
 }
 
 #user-menu {
@@ -95,28 +95,28 @@ footer {
 /* Styling for upload, job description area */
 
 #cv-upload {
-	min-width: 250px;
-	margin-bottom: 10px;
+  min-width: 250px;
+  margin-bottom: 10px;
 }
 
 #job-description {
-	min-width: 250px;
-	margin-bottom: 10px;
+  min-width: 250px;
+  margin-bottom: 10px;
 }
 
 textarea {
   width: 100%;
-	padding: 10px;
-	border-radius: 5px;
-	border: 1px solid #ccc;
-	box-sizing: border-box;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
   main p {
-		font-size: 16px;
-		line-height: 21px;
-	}
+    font-size: 16px;
+    line-height: 21px;
+  }
 }
 /* Give file upload area same style as text area w/out width. */
 /* input[type="file"] { */
@@ -130,31 +130,31 @@ textarea {
 
 #loginBtn {
   background-color: white;
-	color: black;
-	border: 1px solid black;
-	padding: 10px 15px;
-	border-radius: 5px;
-	cursor: pointer;
+  color: black;
+  border: 1px solid black;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 #signupBtn {
   background-color: black;
-	color: white;
-	border: 1px solid black;
-	padding: 10px 15px;
-	border-radius: 5px;
-	cursor: pointer;
-	margin-left: 10px;
+  color: white;
+  border: 1px solid black;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
 }
 
 #tailorCV,
 #downloadCV {
   background-color: #FFEA00; /* Bright Yellow */
-	color: black;
-	border: 1px solid black;
-	padding: 10px 15px;
-	border-radius: 5px;
-	cursor: pointer;
+  color: black;
+  border: 1px solid black;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 #loginBtn:hover {
@@ -172,43 +172,43 @@ textarea {
 
 /* Pop-up signup page styling */
 .modal {
-	display: none;
+  display: none;
   position: fixed;
-	z-index: 1;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	background-color: rgba(0, 0, 0, 0.9);
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.9);
 }
 
 .modal-content {
   background-color: #F8F9FA;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 90%;
-	max-width: 500px;
-	border-radius: 5px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
+  padding: 20px;
+  border: 1px solid #888;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .close-button {
   color: gray;
-	float: right;
-	font-size: 28px;
-	font-weight: bold;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
 }
 
 .close-button:hover,
 .close-button:focus {
   color: black;
-	text-decoration: none;
-	cursor: pointer;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .modal h2 {
@@ -217,28 +217,28 @@ textarea {
 
 .modal label {
   margin-top: 10px;
-	display: block;
+  display: block;
 }
 
 input[type="email"],
 input[type="password"] {
   width: 100%;
-	padding: 10px;
-	margin-top: 5px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	box-sizing: border-box;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
 }
 
 .modal button {
   background-color: black;
-	color: white;
-	border: none;
-	padding: 10px;
-	border-radius: 5px;
-	cursor: pointer;
-	margin-top: 10px;
-	width: 100%;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
 }
 
 .modal button:hover {
@@ -251,8 +251,8 @@ input[type="password"] {
 
 .google-signup button {
   background-color: white;
-	color: black;
-	border: 1px solid black;
+  color: black;
+  border: 1px solid black;
 }
 
 .google-signup button:hover {
@@ -261,14 +261,19 @@ input[type="password"] {
 
 @media (max-width: 600px) {
   .modal-content {
-		padding: 15px;
-	}
+    padding: 15px;
+  }
 
-	.close-button {
-		font-size: 24px;
-	}
+  .close-button {
+    font-size: 24px;
+  }
 
-	.modal h2 {
-		font-size: 30px;
-	}
+  .modal h2 {
+    font-size: 30px;
+  }
+}
+
+/* Preview page styling */
+#tailorCV-btn {
+  margin-bottom: 100px;
 }

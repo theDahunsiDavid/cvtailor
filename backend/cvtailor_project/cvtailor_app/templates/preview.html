@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,58 +7,70 @@
     <title>CV Preview</title>
     <!-- Quill CSS -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-#content-container {
-  display: flex;
-  height: 100vh;
-}
-        #editor-container {
-          flex: 3;
-          margin-right: 20px;
-          position: relative; /* Add this line */
-        }
-        #job-description-container {
-          flex: 1;
-          padding-left: 20px;
-          border-left: 1px solid #ccc;
-        }
-        #job-description-editor{
-          height: 40%;
-          overflow-y: auto;
-        }
+      #content-container {
+        display: flex;
+        height: 100vh;
+      }
+      #editor-container {
+        flex: 3;
+        margin-right: 20px;
+        position: relative; /* Add this line */
+      }
+      #job-description-container {
+        flex: 1;
+        padding-left: 20px;
+        border-left: 1px solid #ccc;
+      }
+      #job-description-editor{
+        height: 40%;
+        overflow-y: auto;
+      }
 
-        /* Dropdown Menu Styling */
-        #download-dropdown {
-          position: absolute;
-          top: 40px; /* Position it right below the button */
-          right: 0;
-          display: none; /* Initially hidden */
-          background-color: white;
-          border: 1px solid #ccc;
-          box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
+      /* Dropdown Menu Styling */
+      #download-dropdown {
+        position: absolute;
+        top: 40px; /* Position it right below the button */
+        right: 0;
+        display: none; /* Initially hidden */
+        background-color: white;
+        border: 1px solid #ccc;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      }
 
-        #download-dropdown a {
-          display: block;
-          padding: 10px 15px;
-          text-decoration: none;
-          color: black;
-        }
+      #download-dropdown a {
+        display: block;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: black;
+      }
 
-        #download-dropdown a:hover {
-          background-color: #f1f1f1;
-        }
+      #download-dropdown a:hover {
+        background-color: #f1f1f1;
+      }
 
-        /* Download Button Styling */
-        #download-btn {
-          position: absolute;
-          top: 0;
-          right: 0;
-          cursor: pointer;
-        }
+      /* Download Button Styling */
+      #download-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
+    <!-- Navigation/header section -->
+    <header>
+      <img src="{% static 'images/cvtailor-logo2.png' %}" alt="CV Tailor Logo" id="logo" />
+      <div id="user-menu">
+        <button id="loginBtn">Log In</button>
+        <button id="signupBtn">Sign Up</button>
+      </div>
+    </header>
+
     <h1>Preview Your CV</h1>
     <p>Download it in any format when you're ready.</p>
 
@@ -81,7 +94,7 @@
         <h2>Job Description</h2>
         <div id="job-description-editor"></div>
         <section id="tailor-cv">
-          <button id="tailorCV">Tailor My CV</button>
+          <button id="tailorCV-btn">Tailor My CV</button>
         </section>
 
         <!-- Section to display the match score -->
@@ -131,7 +144,7 @@
         }
 
         // Tailor CV on button click
-        document.getElementById('tailorCV').addEventListener('click', function(event) {
+        document.getElementById('tailorCV-btn').addEventListener('click', function(event) {
           event.preventDefault();
           var cvContent = quill.root.innerHTML;
           var jobDescription = jobDescriptionEditor.root.innerHTML;
@@ -236,7 +249,7 @@
             })
             .catch(error => console.error('Error downloading DOCX:', error));
         });
-      */
+         */
 
         // Event listener for downloading as PDF
         document.getElementById('download-pdf').addEventListener('click', function(event) {

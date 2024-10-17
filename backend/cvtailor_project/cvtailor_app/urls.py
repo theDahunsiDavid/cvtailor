@@ -9,7 +9,7 @@ urlpatterns = [
     path('upload/', views.upload_cv, name="upload_cv"),
     path('convert_ats/', convert_to_ats_format, name='convert_ats'),
     path('apply_suggestion/', views.apply_suggestion, name='apply_suggestion'),
-    path('download_docx/', views.download_docx, name='download_docx'),
+    # path('download_docx/', views.download_docx, name='download_docx'),
     path('download_pdf/', views.download_pdf, name='download_pdf'),
 ]
 

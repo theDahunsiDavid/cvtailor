@@ -110,7 +110,7 @@ def generate_ats_format_and_match_score(cv_content, job_description):
             f"Remove any empty lines between a section title/heading and its content."
             f"Do not separate sections with '---' or the likes."
             f"Do not end your response with '---' or the likes."
-            f"Format each job entry as 'Company Name (Position) [Date Range]' and include a bullet point list of responsibilities under each position. Use hyphens in the Date Ranges. Do not use en dash or em dash in the Date Ranges.\n"
+            f"Format each job entry as 'Company Name (Position) [Date Range]' and include a bullet point list of responsibilities under each position. Do not format each job entry with a bullet point like '- Company Name (Position) [Date Range]'. Use hyphens in the Date Ranges. Do not use en dash or em dash in the Date Ranges.\n"
             f"Format the WORK EXPERIENCE section in reverse-chronological order.\n"
             f"Use simple headings for section titles, and ensure all sections are clearly separated without unnecessary commas or separators.\n"
             f"Format the WORK EXPERIENCE section in reverse-chronological format."
@@ -235,7 +235,7 @@ def apply_suggestion_to_cv(cv_content, suggestion):
     except Exception as e:
         print(f"Error applying suggestion: {e}")
         return cv_content  # Return unmodified content if there's an error
-
+"""
 def download_docx(request):
     # Get the tailored CV content from the request
     cv_content = request.POST.get('cv_content', '')
@@ -254,6 +254,7 @@ def download_docx(request):
     response['Content-Disposition'] = 'attachment; filename="tailored_cv.docx"'
 
     return response
+"""
 
 def download_pdf(request):
     # Get the tailored CV content from the request

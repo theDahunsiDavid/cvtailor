@@ -71,7 +71,7 @@
 
         <!-- Dropdown Menu for file format selection -->
         <div id="download-dropdown">
-          <a href="#" id="download-docx">Download as .docx</a>
+          <!-- <a href="#" id="download-docx">Download as .docx</a> -->
           <a href="#" id="download-pdf">Download as .pdf</a>
         </div>
       </div>
@@ -104,177 +104,167 @@
 
     <!-- Initialize Quill editor -->
     <script>
-      // Initialize Quill for CV content
-      var quill = new Quill('#quill-editor', {
-        theme: 'snow',
-        readOnly: false
-      });
+      document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Quill for CV content
+        var quill = new Quill('#quill-editor', {
+          theme: 'snow',
+          readOnly: false
+        });
 
-      // Set combined CV content
-      var combinedSections = "";
-      {% for section, content in sections.items %}
-      combinedSections += "{{ content|escapejs|safe }}";
-      {% endfor %}
-      quill.clipboard.dangerouslyPasteHTML(0, combinedSections);
+        // Set combined CV content
+        var combinedSections = "";
+        {% for section, content in sections.items %}
+        combinedSections += "{{ content|escapejs|safe }}";
+        {% endfor %}
+        quill.clipboard.dangerouslyPasteHTML(0, combinedSections);
 
-      // Initialize Quill for Job Description
-      var jobDescriptionEditor = new Quill('#job-description-editor', {
-        theme: 'snow',
-        readOnly: false
-      });
-      jobDescriptionEditor.clipboard.dangerouslyPasteHTML(0, formatJobDescription("{{ job_description|escapejs|safe }}"));
+        // Initialize Quill for Job Description
+        var jobDescriptionEditor = new Quill('#job-description-editor', {
+          theme: 'snow',
+          readOnly: false
+        });
+        jobDescriptionEditor.clipboard.dangerouslyPasteHTML(0, formatJobDescription("{{ job_description|escapejs|safe }}"));
 
-      // Function to format job description
-      function formatJobDescription(description) {
-        return description.replace(/  /g, '&nbsp;&nbsp;').replace(/\n/g, '<br>');
-      }
+        // Function to format job description
+        function formatJobDescription(description) {
+          return description.replace(/  /g, '&nbsp;&nbsp;').replace(/\n/g, '<br>');
+        }
 
-      // Tailor CV on button click
-      document.getElementById('tailorCV').addEventListener('click', function(event) {
-        event.preventDefault();
-        var cvContent = quill.root.innerHTML;
-        var jobDescription = jobDescriptionEditor.root.innerHTML;
+        // Tailor CV on button click
+        document.getElementById('tailorCV').addEventListener('click', function(event) {
+          event.preventDefault();
+          var cvContent = quill.root.innerHTML;
+          var jobDescription = jobDescriptionEditor.root.innerHTML;
 
-        fetch('/convert_ats/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': '{{ csrf_token }}'
-          },
-          body: new URLSearchParams({
-            'cv_content': cvContent,
-            'job_description': jobDescription
-          })
-        })
-          .then(response => response.json())
-          .then(data => {
-            quill.root.innerHTML = ''; 
-            quill.clipboard.dangerouslyPasteHTML(0, data.ats_cv_content); 
-            document.getElementById('match-score-value').textContent = `${data.match_score}/100`;
-
-            // Dynamically insert suggestions (if applicable)
-            const suggestionsContainer = document.getElementById('suggestions-container');
-            suggestionsContainer.innerHTML = '';  // Clear previous suggestions
-            data.suggestions.forEach(suggestion => {
-              const button = document.createElement('button');
-              button.classList.add('suggestion-button');
-              button.textContent = suggestion;
-              suggestionsContainer.appendChild(button);
-            });
-          })
-          .catch(error => console.error('Error:', error));
-      });
-
-      // Event listener for dynamically added suggestion buttons
-      document.getElementById('suggestions-container').addEventListener('click', function(event) {
-        if (event.target.classList.contains('suggestion-button')) {
-          const suggestion = event.target.textContent;
-          fetch('/apply_suggestion/', {
+          fetch('/convert_ats/', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
               'X-CSRFToken': '{{ csrf_token }}'
             },
             body: new URLSearchParams({
-              'cv_content': quill.root.innerHTML,
-              'suggestion': suggestion
+              'cv_content': cvContent,
+              'job_description': jobDescription
             })
           })
             .then(response => response.json())
             .then(data => {
               quill.root.innerHTML = ''; 
-              quill.clipboard.dangerouslyPasteHTML(0, data.updated_cv_content);
+              quill.clipboard.dangerouslyPasteHTML(0, data.ats_cv_content); 
+              document.getElementById('match-score-value').textContent = `${data.match_score}/100`;
+
+              // Dynamically insert suggestions (if applicable)
+              const suggestionsContainer = document.getElementById('suggestions-container');
+              suggestionsContainer.innerHTML = '';  // Clear previous suggestions
+              data.suggestions.forEach(suggestion => {
+                const button = document.createElement('button');
+                button.classList.add('suggestion-button');
+                button.textContent = suggestion;
+                suggestionsContainer.appendChild(button);
+              });
             })
-            .catch(error => console.error('Error applying suggestion:', error));
-        }
-      });
+            .catch(error => console.error('Error:', error));
+        });
 
-      // Toggle the dropdown menu visibility
-      document.getElementById('download-btn').addEventListener('click', function() {
-        var dropdown = document.getElementById('download-dropdown');
-        if (dropdown.style.display === 'none' || dropdown.style.display === '') {
-          dropdown.style.display = 'block';
-        } else {
-          dropdown.style.display = 'none';
-        }
-      });
+        // Event listener for dynamically added suggestion buttons
+        document.getElementById('suggestions-container').addEventListener('click', function(event) {
+          if (event.target.classList.contains('suggestion-button')) {
+            const suggestion = event.target.textContent;
+            fetch('/apply_suggestion/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+              },
+              body: new URLSearchParams({
+                'cv_content': quill.root.innerHTML,
+                'suggestion': suggestion
+              })
+            })
+              .then(response => response.json())
+              .then(data => {
+                quill.root.innerHTML = ''; 
+                quill.clipboard.dangerouslyPasteHTML(0, data.updated_cv_content);
+              })
+              .catch(error => console.error('Error applying suggestion:', error));
+          }
+        });
 
-      // Close the dropdown when clicking outside of it
-      document.addEventListener('click', function(event) {
-        var dropdown = document.getElementById('download-dropdown');
-        var downloadButton = document.getElementById('download-btn');
-        if (!dropdown.contains(event.target) && event.target !== downloadButton) {
-          dropdown.style.display = 'none';
-        }
-      });
+        // Toggle the dropdown menu visibility
+        document.getElementById('download-btn').addEventListener('click', function() {
+          var dropdown = document.getElementById('download-dropdown');
+          if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+            dropdown.style.display = 'block';
+          } else {
+            dropdown.style.display = 'none';
+          }
+        });
 
-      // Event listeners for download options
-      document.getElementById('download-docx').addEventListener('click', function(event) {
-        event.preventDefault();
-        // Add your DOCX download logic here
-        console.log('Download as DOCX');
-      });
+        // Close the dropdown when clicking outside of it
+        document.addEventListener('click', function(event) {
+          var dropdown = document.getElementById('download-dropdown');
+          var downloadButton = document.getElementById('download-btn');
+          if (!dropdown.contains(event.target) && event.target !== downloadButton) {
+            dropdown.style.display = 'none';
+          }
+        });
 
-      document.getElementById('download-pdf').addEventListener('click', function(event) {
-        event.preventDefault();
-        // Add your PDF download logic here
-        console.log('Download as PDF');
-      });
+        // Event listener for downloading as DOCX
+        /* document.getElementById('download-docx').addEventListener('click', function(event) {
+          event.preventDefault();
+          var cvContent = quill.root.innerHTML;
 
-      // Event listener for downloading as DOCX
-      document.getElementById('download-docx').addEventListener('click', function(event) {
-        event.preventDefault();
-        var cvContent = quill.root.innerHTML;
-
-        fetch('/download_docx/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': '{{ csrf_token }}' // Pass CSRF token for Django
-          },
-          body: new URLSearchParams({
-            'cv_content': cvContent
+          fetch('/download_docx/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'X-CSRFToken': '{{ csrf_token }}' // Pass CSRF token for Django
+            },
+            body: new URLSearchParams({
+              'cv_content': cvContent
+            })
           })
-        })
-          .then(response => response.blob())  // Convert response to a Blob
-          .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "tailored_cv.docx";  // Filename for download
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-          })
-          .catch(error => console.error('Error downloading DOCX:', error));
-      });
+            .then(response => response.blob())  // Convert response to a Blob
+            .then(blob => {
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = "tailored_cv.docx";  // Filename for download
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+            })
+            .catch(error => console.error('Error downloading DOCX:', error));
+        });
+      */
 
-      // Event listener for downloading as PDF
-      document.getElementById('download-pdf').addEventListener('click', function(event) {
-        event.preventDefault();
-        var cvContent = quill.root.innerHTML;
+        // Event listener for downloading as PDF
+        document.getElementById('download-pdf').addEventListener('click', function(event) {
+          event.preventDefault();
+          var cvContent = quill.root.innerHTML;
 
-        fetch('/download_pdf/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': '{{ csrf_token }}' // Pass CSRF token for Django
-          },
-          body: new URLSearchParams({
-            'cv_content': cvContent
+          fetch('/download_pdf/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'X-CSRFToken': '{{ csrf_token }}' // Pass CSRF token for Django
+            },
+            body: new URLSearchParams({
+              'cv_content': cvContent
+            })
           })
-        })
-          .then(response => response.blob())  // Convert response to a Blob
-          .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "tailored_cv.pdf";  // Filename for download
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-          })
-          .catch(error => console.error('Error downloading PDF:', error));
+            .then(response => response.blob())  // Convert response to a Blob
+            .then(blob => {
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = "tailored_cv.pdf";  // Filename for download
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+            })
+            .catch(error => console.error('Error downloading PDF:', error));
+        });
       });
     </script>
   </body>

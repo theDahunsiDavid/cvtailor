@@ -104,21 +104,21 @@ def generate_ats_format_and_match_score(cv_content, job_description):
     try:
         # Create a prompt for OpenAI
         prompt = (
-            f"Convert the following CV content to an ATS-friendly format as possible without removing personal data like name, address, email, contact info, and other identifying details that would normally not be in an ATS-friendly CV. Let there be no omissions or missing parts, meaning do not remove any sections containing personal information or contact information.\n"
-            f"Section titles/headings in the CV content are in all-caps. Separate all sections with an empty line only, not with commas or separators. All sections in CV content must be present in the ATS-friendly format, including all responsibilities under each work experience entry. Ensure no sections or responsibilities are missing in the ATS-friendly format.\n"
-            f"Do NOT remove a section because its title/heading is a non-standard title. However, where you can, rename the non-standard titles (e.g., PROFILE SUMMARY) for each section to standard, clear section headings like PROFESSIONAL SUMMARY, WORK EXPERIENCE, SKILLS, EDUCATION, etc.\n"
+            f"Convert the following CV content to an ATS-friendly format as possible without removing personal data like name, address, email, contact info, and other identifying details that would normally not be in an ATS-friendly CV. Let there be no omissions or missing parts, meaning do not remove any sections containing personal information or contact information."
+            f"Section titles/headings in the CV content are in all-caps. Separate all sections with an empty line only, not with commas or separators. All sections in CV content must be present in the ATS-friendly format, including all responsibilities under each work experience entry. Ensure no sections or responsibilities are missing in the ATS-friendly format."
+            f"Do NOT remove a section because its title/heading is a non-standard title. However, where you can, rename the non-standard titles (e.g., PROFILE SUMMARY) for each section to standard, clear section headings like PROFESSIONAL SUMMARY, WORK EXPERIENCE, SKILLS, EDUCATION, etc."
             f"Remove any empty lines between a section title/heading and its content."
             f"Do not separate sections with '---' or the likes."
             f"Do not end your response with '---' or the likes."
-            f"Format each job entry as 'Company Name (Position) [Date Range]' and include a bullet point list of responsibilities under each position. Do not format each job entry with a bullet point like '- Company Name (Position) [Date Range]'. Use hyphens in the Date Ranges. Do not use en dash or em dash in the Date Ranges.\n"
-            f"Format the WORK EXPERIENCE section in reverse-chronological order.\n"
-            f"Use simple headings for section titles, and ensure all sections are clearly separated without unnecessary commas or separators.\n"
+            f"Format each job entry as 'Company Name (Position) [Date Range]' and include a bullet point list of responsibilities under each position. Do not format each job entry with a bullet point like '- Company Name (Position) [Date Range]'. Use hyphens in the Date Ranges. Do not use en dash or em dash in the Date Ranges."
+            f"Format the WORK EXPERIENCE section in reverse-chronological order."
+            f"Use simple headings for section titles, and ensure all sections are clearly separated without unnecessary commas or separators."
             f"Format the WORK EXPERIENCE section in reverse-chronological format."
-            f"Include a Match Score (out of 100) that indicates how closely the CV matches the job description as exactly 'Match Score: X/100' where X is the Match Score. Include suggestions to improve the Match Score as 'Suggestions to improve Match Score: X'.\n"
-            f"Proofread and edit the contents of all the sections. Fix all the grammatical errors or typos in the contents of all the sections.\n"
-            f"Double-check that all sections and responsibilities from the original CV are included in your response.\n\n"
-            f"CV Content: {cv_content}\n\n"
-            f"Job Description: {job_description}\n\n"
+            f"Include a Match Score (out of 100) that indicates how closely the CV matches the job description as exactly 'Match Score: X/100' where X is the Match Score. Include suggestions to improve the Match Score as 'Suggestions to improve Match Score: X'."
+            f"Proofread and edit the contents of all the sections. Fix all the grammatical errors or typos in the contents of all the sections."
+            f"Double-check that all sections and responsibilities from the original CV are included in your response.\n"
+            f"CV Content: {cv_content}\n"
+            f"Job Description: {job_description}\n"
 )
 
 

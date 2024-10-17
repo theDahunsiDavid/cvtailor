@@ -104,7 +104,7 @@ def generate_ats_format_and_match_score(cv_content, job_description):
     try:
         # Create a prompt for OpenAI
         prompt = (
-            f"Convert the following CV content to an ATS-friendly format as possible without removing personal data like name, address, email, contact info, and other identifying details that would normally not be in an ATS-friendly CV. Let there be no omissions or missing parts, meaning do not remove any sections containing personal information or contact information."
+            f"Convert the following CV content to an ATS-friendly format as possible without removing personal data like name, address, email, contact info, and other identifying details that would normally not be in an ATS-friendly CV. Let there be no omissions or missing parts, meaning do not remove any sections containing personal information or contact information. Then proofread and edit the content to remove all typographical errors."
             f"Section titles/headings in the CV content are in all-caps. Separate all sections with an empty line only, not with commas or separators. All sections in CV content must be present in the ATS-friendly format, including all responsibilities under each work experience entry. Ensure no sections or responsibilities are missing in the ATS-friendly format."
             f"Do NOT remove a section because its title/heading is a non-standard title. However, where you can, rename the non-standard titles (e.g., PROFILE SUMMARY) for each section to standard, clear section headings like PROFESSIONAL SUMMARY, WORK EXPERIENCE, SKILLS, EDUCATION, etc."
             f"Remove any empty lines between a section title/heading and its content."

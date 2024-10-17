@@ -220,6 +220,62 @@
         // Add your PDF download logic here
         console.log('Download as PDF');
       });
+
+      // Event listener for downloading as DOCX
+      document.getElementById('download-docx').addEventListener('click', function(event) {
+        event.preventDefault();
+        var cvContent = quill.root.innerHTML;
+
+        fetch('/download_docx/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}' // Pass CSRF token for Django
+          },
+          body: new URLSearchParams({
+            'cv_content': cvContent
+          })
+        })
+          .then(response => response.blob())  // Convert response to a Blob
+          .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "tailored_cv.docx";  // Filename for download
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          })
+          .catch(error => console.error('Error downloading DOCX:', error));
+      });
+
+      // Event listener for downloading as PDF
+      document.getElementById('download-pdf').addEventListener('click', function(event) {
+        event.preventDefault();
+        var cvContent = quill.root.innerHTML;
+
+        fetch('/download_pdf/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}' // Pass CSRF token for Django
+          },
+          body: new URLSearchParams({
+            'cv_content': cvContent
+          })
+        })
+          .then(response => response.blob())  // Convert response to a Blob
+          .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "tailored_cv.pdf";  // Filename for download
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          })
+          .catch(error => console.error('Error downloading PDF:', error));
+      });
     </script>
   </body>
 </html>

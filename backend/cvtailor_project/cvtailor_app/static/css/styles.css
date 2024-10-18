@@ -275,5 +275,29 @@ input[type="password"] {
 
 /* Preview page styling */
 #tailorCV-btn {
-  margin-top: 100px;
+  margin-top: 10px;
+  background-color: #FFEA00; /* Bright Yellow */
+  color: black;
+  border: 1px solid black;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#tailorCV-btn:hover {
+  background-color: #E4D00A /* Citrine yellow */
+}
+
+#download-btn {
+  background-color: black;
+  color: white;
+  border: 1px solid black;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+#download-btn:hover {
+  background-color: #444;
 }

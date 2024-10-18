@@ -3,7 +3,9 @@ import os
 import re
 import io
 import pdfkit #note: ensure wkhtmltopdf is already installed
+from django.conf import settings
 from openai import OpenAI
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
 from decouple import config
 from django.http import JsonResponse, HttpResponse
 from docx import Document
@@ -12,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import JobApplication
 from .forms import JobApplicationForm
 
-client = OpenAI(api_key=config('OPENAI_API_KEY'))
+# client = OpenAI(api_key=config('OPENAI_API_KEY'))
 
 # Home view for landing page
 def home(request):
@@ -126,12 +128,10 @@ def generate_ats_format_and_match_score(cv_content, job_description):
 
 
         # Call OpenAI API to generate ATS content
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
+        response = client.chat.completions.create(model="gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": prompt}
+        ])
 
         # Print the raw response for debugging
         # print("OpenAI Response:", response)

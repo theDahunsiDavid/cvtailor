@@ -3,3 +3,4 @@ venv/
 env/
 **/.env
 ./backend/cvtailor_project/.env
+./backend/cvtailor_project/wkhtmltox-0.12.6-3.archlinux-x86_64.pkg.tar.xz

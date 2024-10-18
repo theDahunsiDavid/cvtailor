@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import JobApplication
 from .forms import JobApplicationForm
 
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="Insert API key through environment variable later.A")
 
 # Home view for landing page
 def home(request):

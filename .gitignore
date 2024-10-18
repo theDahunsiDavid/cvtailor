@@ -2,3 +2,4 @@
 venv/
 env/
 **/.env/
+./backend/cvtailor_project/.env

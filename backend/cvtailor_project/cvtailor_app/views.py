@@ -4,6 +4,7 @@ import re
 import io
 import pdfkit #note: ensure wkhtmltopdf is already installed
 from openai import OpenAI
+from decouple import config
 from django.http import JsonResponse, HttpResponse
 from docx import Document
 from django.shortcuts import render, redirect
@@ -11,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import JobApplication
 from .forms import JobApplicationForm
 
-client = OpenAI(api_key="Insert API key through environment variable later.A")
+client = OpenAI(api_key=config('OPENAI_API_KEY'))
 
 # Home view for landing page
 def home(request):

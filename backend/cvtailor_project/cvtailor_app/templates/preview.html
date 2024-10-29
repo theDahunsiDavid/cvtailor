@@ -11,55 +11,55 @@
 		<link rel="stylesheet" href="{% static 'css/styles.css' %}">
 		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 		<style>
-	#content-container {
-		display: flex;
-		height: 100vh;
-	}
-	#editor-container {
-		flex: 3;
-		margin-right: 20px;
-		position: relative;
-	}
-	#job-description-container {
-		flex: 1;
-		padding-left: 20px;
-		border-left: 1px solid #ccc;
-	}
-	#job-description-editor{
-		height: 40%;
-		overflow-y: auto;
-	}
+		#content-container {
+			display: flex;
+			height: 100vh;
+		}
+		#editor-container {
+			flex: 3;
+			margin-right: 20px;
+			position: relative;
+		}
+		#job-description-container {
+			flex: 1;
+			padding-left: 20px;
+			border-left: 1px solid #ccc;
+		}
+		#job-description-editor{
+			height: 40%;
+			overflow-y: auto;
+		}
 
-	/* Dropdown Menu Styling */
-	#download-dropdown {
-		position: absolute;
-		top: 40px; /* Position it right below the button */
-		right: 0;
-		display: none; /* Initially hidden */
-		background-color: white;
-		border: 1px solid #ccc;
-		box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-	}
+		/* Dropdown Menu Styling */
+		#download-dropdown {
+			position: absolute;
+			top: 40px; /* Position it right below the button */
+			right: 0;
+			display: none; /* Initially hidden */
+			background-color: white;
+			border: 1px solid #ccc;
+			box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+		}
 
-	#download-dropdown a {
-		display: block;
-		padding: 10px 15px;
-		text-decoration: none;
-		color: black;
-	}
+		#download-dropdown a {
+			display: block;
+			padding: 10px 15px;
+			text-decoration: none;
+			color: black;
+		}
 
-	#download-dropdown a:hover {
-		background-color: #f1f1f1;
-	}
+		#download-dropdown a:hover {
+			background-color: #f1f1f1;
+		}
 
-	/* Download Button Styling */
-	#download-btn {
-		position: absolute;
-		top: 0;
-		right: 0;
-		cursor: pointer;
-	}
-</style>
+		/* Download Button Styling */
+		#download-btn {
+			position: absolute;
+			top: 0;
+			right: 0;
+			cursor: pointer;
+		}
+		</style>
 	</head>
 	<body>
 		<!-- Navigation/header section -->
@@ -72,7 +72,7 @@
 		</header>
 
 		<h1>Preview Your CV</h1>
-		<p>Download it in any format when you're ready.</p>
+	<p>Download it in any format when you're ready.</p>
 
 		<!-- Container for CV content and job description -->
 		<div id="content-container">
@@ -189,9 +189,9 @@
 
 			// Set combined CV content
 			var combinedSections = "";
-		{% for section, content in sections.items %}
+			{% for section, content in sections.items %}
 			combinedSections += "{{ content|escapejs|safe }}";
-		{% endfor %}
+			{% endfor %}
 			quill.clipboard.dangerouslyPasteHTML(0, combinedSections);
 
 			// Initialize Quill for Job Description
@@ -226,7 +226,7 @@
 						'cv_content': cvContent,
 						'job_description': jobDescription
 					})
-				})
+					})
 					.then(response => response.json())
 					.then(data => {
 						quill.root.innerHTML = ''; 
@@ -249,14 +249,14 @@
 					.catch(error => {
 						console.error('Error:', error);
 						tailorButton.textContent = "Tailor My CV"; // Reset button text in case of an error
-					});
+				});
 			});
 
 			// Event listener for dynamically added suggestion buttons
 			document.getElementById('suggestions-container').addEventListener('click', function(event) {
 				if (event.target.classList.contains('suggestion-button')) {
 					const suggestion = event.target.textContent;
-					fetch('/apply_suggestion/', {
+				fetch('/apply_suggestion/', {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/x-www-form-urlencoded',
@@ -266,7 +266,7 @@
 							'cv_content': quill.root.innerHTML,
 							'suggestion': suggestion
 						})
-					})
+						})
 						.then(response => response.json())
 						.then(data => {
 							quill.root.innerHTML = ''; 
@@ -305,7 +305,7 @@
 					body: new URLSearchParams({
 						'cv_content': cvContent
 					})
-				})
+					})
 					.then(response => response.blob())
 					.then(blob => {
 						const url = window.URL.createObjectURL(blob);
@@ -334,6 +334,14 @@
 					handleOpenAIResponse(result); // To handle response and render
 				}
 			});
+
+			function handleOpenAIResponse(result) {
+				const modifiedText = result.modified_text;
+				const highlightedText = `<span class="highlighted-change">${modifiedText}</span>`;
+
+				quill.clipboard.dangerouslyPasteHTML(highlightedText);
+			}
+
 
 		});
 		</script>

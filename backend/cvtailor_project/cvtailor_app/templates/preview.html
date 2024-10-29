@@ -253,6 +253,7 @@
 			});
 
 			// Event listener for dynamically added suggestion buttons
+			/*
 			document.getElementById('suggestions-container').addEventListener('click', function(event) {
 				if (event.target.classList.contains('suggestion-button')) {
 					const suggestion = event.target.textContent;
@@ -275,6 +276,7 @@
 						.catch(error => console.error('Error applying suggestion:', error));
 				}
 			});
+			*/
 
 			// Toggle the dropdown menu visibility
 			document.getElementById('download-btn').addEventListener('click', function() {
@@ -324,7 +326,7 @@
 					const suggestion = event.target.textContent.trim();
 					const currentText = quill.getText();
 
-					const response = await fetch('/api/implement-suggestion', {
+					const response = await fetch('/api/implement_suggestion', {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({ text: currentText, suggestion: suggestion })

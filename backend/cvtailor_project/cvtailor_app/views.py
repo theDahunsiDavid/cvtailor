@@ -2,6 +2,7 @@ import subprocess
 import os
 import re
 import io
+import json
 import pdfkit #note: ensure wkhtmltopdf is already installed
 from django.conf import settings
 from openai import OpenAI
@@ -116,7 +117,7 @@ def generate_ats_format_and_match_score(cv_content, job_description):
             f"Format the WORK EXPERIENCE section in reverse-chronological order."
             f"Use simple headings for section titles, and ensure all sections are clearly separated without unnecessary commas or separators."
             f"Format the WORK EXPERIENCE section in reverse-chronological format."
-            f"Always include a Match Score (out of 100) that indicates how closely the CV matches the job description as exactly 'Match Score: X/100' where X is a number and is the Match Score. Always include numbered suggestions to improve the Match Score as 'Suggestions to improve Match Score: Y' where Y is the numbered suggestions."
+            f"Always include a Match Score (out of 100) that indicates how closely the CV matches the job description as exactly 'Match Score: X/100' where X is a number and is the Match Score. Always include numbered suggestions (changes that can be made to the ATS-friendly CV to improve the Match Score) as 'Suggestions to improve Match Score: Y' where Y is the numbered suggestions."
             f"Proofread and edit the contents of all the sections. Fix all the grammatical errors or typos in the contents of all the sections."
             f"Capitalize all section titles. That is, capitalize all section headers."
             f"Double-check that all sections and responsibilities from the original CV are included in your response.\n"
@@ -138,10 +139,6 @@ def generate_ats_format_and_match_score(cv_content, job_description):
 
         # Extract ATS content from the response
         ats_content = response.choices[0].message.content
-
-        print("RESPONSE:")
-        print(ats_content)
-        print("---")
 
         suggestions = extract_suggestions(ats_content)  # Function to extract suggestions from the response
         print(suggestions)
@@ -286,6 +283,7 @@ def download_pdf(request):
 
     return response
 
+@csrf_exempt
 def implement_suggestion(request):
     """Processes the request to implement suggestion in CV text."""
     data = json.loads(request.body)
@@ -304,6 +302,8 @@ def implement_suggestion(request):
     modified_text = response.choices[0].message.content
 
     highlighted_text = highlight_changes(text, modified_text)
+
+    print("Highlighted Text:", highlighted_text)
 
     return JsonResponse({"highlighted_text": highlighted_text})
 

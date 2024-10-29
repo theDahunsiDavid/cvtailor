@@ -290,11 +290,16 @@ def implement_suggestion(request):
     text = data['text']
     suggestion = data['suggestion']
 
+    prompt = (
+        f"Please modify the provided CV text based on the user's suggestion without altering unrelated sections."
+        f"Just give me all the CV text (including all the modifications) ONLY in your response."
+    )
+
     # Call OpenAI API to implement suggestion in CV text.
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "Please modify the provided CV text based on the user's suggestion without altering unrelated sections."},
+            {"role": "system", "content": prompt},
             {"role": "user", "content": f"CV Text: {text}\n\nSuggestion: {suggestion}"}
         ]
     )

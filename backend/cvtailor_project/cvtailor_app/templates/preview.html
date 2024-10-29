@@ -336,13 +336,28 @@
 			});
 
 			function handleOpenAIResponse(result) {
-				const modifiedText = result.modified_text;
-				const highlightedText = `<span class="highlighted-change">${modifiedText}</span>`;
-
+				const highlightedText = result.highlighted_text;
 				quill.clipboard.dangerouslyPasteHTML(highlightedText);
 			}
 
+			// Accept a change by removing the Accept/Reject controls for that change
+			function acceptChange(changeId) {
+				const changeElement = document.getElementById(changeId);
+				if (changeElement) {
+					// Remove buttons after accepting the change
+					changeElement.querySelectorAll("button").forEach(button => button.remove());
+					changeElement.classList.add("accepted-change"); // Optional styling for accepted changes
+				}
+			}
 
+			// Reject a change by removing the change entirely.
+			function rejectChange(changeId) {
+				const changeElement = document.getElementById(changeId);
+				if (changeElement) {
+					// Remove entire highlighted span
+					changeElement.remove();
+				}
+			}
 		});
 		</script>
 

@@ -309,22 +309,32 @@ def implement_suggestion(request):
 
 def highlight_changes(original_text: str, modified_text: str) -> str:
     """
-    Compares original and modified text & highlights differences.
+    Compares original and modified text & highlights differences-
+    -with Accept and Reject controls.
 
     Args:
         original_text (str): original CV text.
         modified_text (str): modified CV text w/ suggestion implemented.
 
     Returns:
-        str: modified text w/ only changes highlighted.
+        str: modified text w/ only changes highlighted & controls added.
     """
     highlighted_text = ""
     diff = ndiff(original_text.split(), modified_text.split())
+    change_id = 0 # Unique ID for each change
 
     for token in diff:
         # Tokens prefixed w/ "+" are additions in modified_text
         if token.startswith("+ "):
-            highlighted_text += f'<span class="highlighted-change">{token[2:]}</span> '
+            highlighted_text += (
+                f'<span class="highlighted-change" id="change-{change_id}">'
+                f'{token[2:]}'
+                f'<button onclick="acceptChange(\'change-{change_id}\')">Accept</button>'
+                f'<button onclick="rejectChange(\'change-{change_id}\')">Reject</button>'
+                f'</span> '
+            )
+            # Generate a unique ID for each change span
+            change_id += 1
         elif token.startswith("- "):
             # Ignore deletions from original_text
             continue

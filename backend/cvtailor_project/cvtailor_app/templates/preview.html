@@ -1,325 +1,342 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV Preview</title>
-    <!-- Quill CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
-    <!-- Local CSS -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-#content-container {
-  display: flex;
-  height: 100vh;
-}
-      #editor-container {
-        flex: 3;
-        margin-right: 20px;
-        position: relative; /* Add this line */
-      }
-      #job-description-container {
-        flex: 1;
-        padding-left: 20px;
-        border-left: 1px solid #ccc;
-      }
-      #job-description-editor{
-        height: 40%;
-        overflow-y: auto;
-      }
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>CV Preview</title>
+		<!-- Quill CSS -->
+		<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+		<!-- Local CSS -->
+		<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+		<style>
+	#content-container {
+		display: flex;
+		height: 100vh;
+	}
+	#editor-container {
+		flex: 3;
+		margin-right: 20px;
+		position: relative;
+	}
+	#job-description-container {
+		flex: 1;
+		padding-left: 20px;
+		border-left: 1px solid #ccc;
+	}
+	#job-description-editor{
+		height: 40%;
+		overflow-y: auto;
+	}
 
-      /* Dropdown Menu Styling */
-      #download-dropdown {
-        position: absolute;
-        top: 40px; /* Position it right below the button */
-        right: 0;
-        display: none; /* Initially hidden */
-        background-color: white;
-        border: 1px solid #ccc;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-      }
+	/* Dropdown Menu Styling */
+	#download-dropdown {
+		position: absolute;
+		top: 40px; /* Position it right below the button */
+		right: 0;
+		display: none; /* Initially hidden */
+		background-color: white;
+		border: 1px solid #ccc;
+		box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+	}
 
-      #download-dropdown a {
-        display: block;
-        padding: 10px 15px;
-        text-decoration: none;
-        color: black;
-      }
+	#download-dropdown a {
+		display: block;
+		padding: 10px 15px;
+		text-decoration: none;
+		color: black;
+	}
 
-      #download-dropdown a:hover {
-        background-color: #f1f1f1;
-      }
+	#download-dropdown a:hover {
+		background-color: #f1f1f1;
+	}
 
-      /* Download Button Styling */
-      #download-btn {
-        position: absolute;
-        top: 0;
-        right: 0;
-        cursor: pointer;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Navigation/header section -->
-    <header>
-      <img src="{% static 'images/cvtailor-logo2.png' %}" alt="CV Tailor Logo" id="logo" />
-      <div id="user-menu">
-        <button id="loginBtn">Log In</button>
-        <button id="signupBtn">Sign Up</button>
-      </div>
-    </header>
+	/* Download Button Styling */
+	#download-btn {
+		position: absolute;
+		top: 0;
+		right: 0;
+		cursor: pointer;
+	}
+</style>
+	</head>
+	<body>
+		<!-- Navigation/header section -->
+		<header>
+			<img src="{% static 'images/cvtailor-logo2.png' %}" alt="CV Tailor Logo" id="logo" />
+			<div id="user-menu">
+				<button id="loginBtn">Log In</button>
+				<button id="signupBtn">Sign Up</button>
+			</div>
+		</header>
 
-    <h1>Preview Your CV</h1>
-    <p>Download it in any format when you're ready.</p>
+		<h1>Preview Your CV</h1>
+		<p>Download it in any format when you're ready.</p>
 
-    <!-- Container for CV content and job description -->
-    <div id="content-container">
-      <!-- Quill Text editor container for CV content -->
-      <div id="editor-container">
-        <div id="quill-editor"></div> <!-- Target only this for Quill -->
-        <!-- Add the download button here -->
-        <button id="download-btn">Download</button>
+		<!-- Container for CV content and job description -->
+		<div id="content-container">
+			<!-- Quill Text editor container for CV content -->
+			<div id="editor-container">
+				<div id="quill-editor"></div> <!-- Target only this for Quill -->
+				<!-- Add the download button here -->
+				<button id="download-btn">Download</button>
 
-        <!-- Dropdown Menu for file format selection -->
-        <div id="download-dropdown">
-          <!-- <a href="#" id="download-docx">Download as .docx</a> -->
-          <a href="#" id="download-pdf">Download as .pdf</a>
-        </div>
-      </div>
+				<!-- Dropdown Menu for file format selection -->
+				<div id="download-dropdown">
+					<!-- <a href="#" id="download-docx">Download as .docx</a> -->
+					<a href="#" id="download-pdf">Download as .pdf</a>
+				</div>
+			</div>
 
-      <!-- Job description container -->
-      <div id="job-description-container">
-        <h2>Job Description</h2>
-        <div id="job-description-editor"></div>
-        <section id="tailor-cv">
-          <button id="tailorCV-btn">Tailor My CV</button>
-        </section>
+			<!-- Job description container -->
+			<div id="job-description-container">
+				<h2>Job Description</h2>
+				<div id="job-description-editor"></div>
+				<section id="tailor-cv">
+					<button id="tailorCV-btn">Tailor My CV</button>
+				</section>
 
-        <!-- Section to display the match score -->
-        <section id="match-score">
-          <h3>Match Score</h3>
-          <p id="match-score-value"></p> <!-- The match score will be displayed here -->
-        </section>
+				<!-- Section to display the match score -->
+				<section id="match-score">
+					<h3>Match Score</h3>
+					<p id="match-score-value"></p> <!-- The match score will be displayed here -->
+				</section>
 
-        <h4>Suggestions to Improve Match Score</h4>
-        <div id="suggestions-container">
-          {% for suggestion in suggestions %}
-          <button class="suggestion-button">{{ suggestion }}</button>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
+				<h4>Suggestions to Improve Match Score</h4>
+				<div id="suggestions-container">
+					{% for suggestion in suggestions %}
+					<button class="suggestion-button">{{ suggestion }}</button>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
 
-    <!-- Footer section -->
-    <footer>
-      <p>© 2024 CV Tailor. All rights reserved.</p>
-    </footer>
+		<!-- Footer section -->
+		<footer>
+			<p>© 2024 CV Tailor. All rights reserved.</p>
+		</footer>
 
-    <! -- Signup pop-over division -->
-    <div id="signup-modal" class="modal">
-      <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h2>Create Your Account</h2>
-        <form id="signup-form">
-          <label for="signup-email">Email:</label>
-          <input type="email" id="signup-email" name="signup-email" autocomplete="on" required>
+		<! -- Signup pop-over division -->
+		<div id="signup-modal" class="modal">
+			<div class="modal-content">
+				<span class="close-button">&times;</span>
+				<h2>Create Your Account</h2>
+				<form id="signup-form">
+					<label for="signup-email">Email:</label>
+					<input type="email" id="signup-email" name="signup-email" autocomplete="on" required>
 
-          <label for="signup-password">Password:</label>
-          <input type="password" id="signup-password" name="signup-password" required>
+					<label for="signup-password">Password:</label>
+					<input type="password" id="signup-password" name="signup-password" required>
 
-          <label for="confirm-password">Repeat Password:</label>
-          <input type="password" id="confirm-password" name="confirm-password" required>
+					<label for="confirm-password">Repeat Password:</label>
+					<input type="password" id="confirm-password" name="confirm-password" required>
 
-          <button type="submit">Create Account</button>
-        </form>
-        <div class="google-signup">
-          <button id="google-signup-btn">Sign up with Google</button>
-        </div>
-        <p>Already have an account? <a href="#" onclick="openLoginModal()">Log in here</a></p>
-      </div>
-    </div>
+					<button type="submit">Create Account</button>
+				</form>
+				<div class="google-signup">
+					<button id="google-signup-btn">Sign up with Google</button>
+				</div>
+				<p>Already have an account? <a href="#" onclick="openLoginModal()">Log in here</a></p>
+			</div>
+		</div>
 
-    <! -- Login pop-over division -->
-    <div id="login-modal" class="modal">
-      <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h2>Log In</h2>
-        <form id="login-form">
-          <label for="login-email">Email:</label>
-          <input type="email" id="login-email" name="login-email" autocomplete="on" required>
+		<! -- Login pop-over division -->
+		<div id="login-modal" class="modal">
+			<div class="modal-content">
+				<span class="close-button">&times;</span>
+				<h2>Log In</h2>
+				<form id="login-form">
+					<label for="login-email">Email:</label>
+					<input type="email" id="login-email" name="login-email" autocomplete="on" required>
 
-          <label for="login-password">Password:</label>
-          <input type="password" id="login-password" name="login-password" required>
+					<label for="login-password">Password:</label>
+					<input type="password" id="login-password" name="login-password" required>
 
-          <label>
-            <input type="checkbox" id="keep-logged-in" name="keep-logged-in">
-            Keep me logged in
-          </label>
+					<label>
+						<input type="checkbox" id="keep-logged-in" name="keep-logged-in">
+							Keep me logged in
+					</label>
 
-          <button type="submit">Log In Now</button>
-        </form>
+					<button type="submit">Log In Now</button>
+				</form>
 
-        <div class="google-login">
-          <button id="google-login-btn">Sign in with Google</button>
-        </div>
+				<div class="google-login">
+					<button id="google-login-btn">Sign in with Google</button>
+				</div>
 
-        <!-- "Forgot your password?" link -->
-        <p><a href="forgot-password.html">Forgot your password?</a></p>
+				<!-- "Forgot your password?" link -->
+				<p><a href="forgot-password.html">Forgot your password?</a></p>
 
-        <p>Don't have an account yet? <a href="#" onclick="openSignupModal()">Sign up now</a></p>
-      </div>
-    </div>
+				<p>Don't have an account yet? <a href="#" onclick="openSignupModal()">Sign up now</a></p>
+			</div>
+		</div>
 
-    <!-- Javascript section -->
-    <script src="{% static 'js/script.js' %}"></script>
+		<!-- Javascript section -->
+		<script src="{% static 'js/script.js' %}"></script>
 
-    <!-- Quill JS -->
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+		<!-- Quill JS -->
+		<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
-    <!-- Initialize Quill editor -->
-    <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Quill for CV content
-    var quill = new Quill('#quill-editor', {
-      theme: 'snow',
-      readOnly: false
-    });
+		<!-- Initialize Quill editor -->
+		<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			// Initialize Quill for CV content
+			var quill = new Quill('#quill-editor', {
+				theme: 'snow',
+				readOnly: false
+			});
 
-    // Set combined CV content
-    var combinedSections = "";
-    {% for section, content in sections.items %}
-    combinedSections += "{{ content|escapejs|safe }}";
-    {% endfor %}
-    quill.clipboard.dangerouslyPasteHTML(0, combinedSections);
+			// Set combined CV content
+			var combinedSections = "";
+		{% for section, content in sections.items %}
+			combinedSections += "{{ content|escapejs|safe }}";
+		{% endfor %}
+			quill.clipboard.dangerouslyPasteHTML(0, combinedSections);
 
-    // Initialize Quill for Job Description
-    var jobDescriptionEditor = new Quill('#job-description-editor', {
-      theme: 'snow',
-      readOnly: false
-    });
-    jobDescriptionEditor.clipboard.dangerouslyPasteHTML(0, formatJobDescription("{{ job_description|escapejs|safe }}"));
+			// Initialize Quill for Job Description
+			var jobDescriptionEditor = new Quill('#job-description-editor', {
+				theme: 'snow',
+				readOnly: false
+			});
+			jobDescriptionEditor.clipboard.dangerouslyPasteHTML(0, formatJobDescription("{{ job_description|escapejs|safe }}"));
 
-    // Function to format job description
-    function formatJobDescription(description) {
-      return description.replace(/  /g, '&nbsp;&nbsp;').replace(/\n/g, '<br>');
-    }
+			// Function to format job description
+			function formatJobDescription(description) {
+				return description.replace(/  /g, '&nbsp;&nbsp;').replace(/\n/g, '<br>');
+			}
 
-    // Tailor CV on button click
-    document.getElementById('tailorCV-btn').addEventListener('click', function(event) {
-      event.preventDefault();
-      var cvContent = quill.root.innerHTML;
-      var jobDescription = jobDescriptionEditor.root.innerHTML;
+			// Tailor CV on button click
+			document.getElementById('tailorCV-btn').addEventListener('click', function(event) {
+				event.preventDefault();
+				var cvContent = quill.root.innerHTML;
+				var jobDescription = jobDescriptionEditor.root.innerHTML;
 
-      // Change button text to "Loading . . ."
-      const tailorButton = document.getElementById('tailorCV-btn');
-      tailorButton.textContent = "Loading . . .";
+				// Change button text to "Loading . . ."
+				const tailorButton = document.getElementById('tailorCV-btn');
+				tailorButton.textContent = "Loading . . .";
 
-      fetch('/convert_ats/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: new URLSearchParams({
-          'cv_content': cvContent,
-          'job_description': jobDescription
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        quill.root.innerHTML = ''; 
-        quill.clipboard.dangerouslyPasteHTML(0, data.ats_cv_content); 
-        document.getElementById('match-score-value').textContent = data.match_score + '/100';
+				fetch('/convert_ats/', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'X-CSRFToken': '{{ csrf_token }}'
+					},
+					body: new URLSearchParams({
+						'cv_content': cvContent,
+						'job_description': jobDescription
+					})
+				})
+					.then(response => response.json())
+					.then(data => {
+						quill.root.innerHTML = ''; 
+						quill.clipboard.dangerouslyPasteHTML(0, data.ats_cv_content); 
+						document.getElementById('match-score-value').textContent = data.match_score + '/100';
 
-        // Dynamically insert suggestions (if applicable)
-        const suggestionsContainer = document.getElementById('suggestions-container');
-        suggestionsContainer.innerHTML = '';  // Clear previous suggestions
-        data.suggestions.forEach(suggestion => {
-          const button = document.createElement('button');
-          button.classList.add('suggestion-button');
-          button.textContent = suggestion;
-          suggestionsContainer.appendChild(button);
-        });
+						// Dynamically insert suggestions (if applicable)
+						const suggestionsContainer = document.getElementById('suggestions-container');
+						suggestionsContainer.innerHTML = '';  // Clear previous suggestions
+						data.suggestions.forEach(suggestion => {
+							const button = document.createElement('button');
+							button.classList.add('suggestion-button');
+							button.textContent = suggestion;
+							suggestionsContainer.appendChild(button);
+						});
 
-        // Reset button text after processing
-        tailorButton.textContent = "Tailor My CV"; 
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        tailorButton.textContent = "Tailor My CV"; // Reset button text in case of an error
-      });
-    });
+						// Reset button text after processing
+						tailorButton.textContent = "Tailor My CV"; 
+					})
+					.catch(error => {
+						console.error('Error:', error);
+						tailorButton.textContent = "Tailor My CV"; // Reset button text in case of an error
+					});
+			});
 
-    // Event listener for dynamically added suggestion buttons
-    document.getElementById('suggestions-container').addEventListener('click', function(event) {
-      if (event.target.classList.contains('suggestion-button')) {
-        const suggestion = event.target.textContent;
-        fetch('/apply_suggestion/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': '{{ csrf_token }}'
-          },
-          body: new URLSearchParams({
-            'cv_content': quill.root.innerHTML,
-            'suggestion': suggestion
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          quill.root.innerHTML = ''; 
-          quill.clipboard.dangerouslyPasteHTML(0, data.updated_cv_content);
-        })
-        .catch(error => console.error('Error applying suggestion:', error));
-      }
-    });
+			// Event listener for dynamically added suggestion buttons
+			document.getElementById('suggestions-container').addEventListener('click', function(event) {
+				if (event.target.classList.contains('suggestion-button')) {
+					const suggestion = event.target.textContent;
+					fetch('/apply_suggestion/', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+							'X-CSRFToken': '{{ csrf_token }}'
+						},
+						body: new URLSearchParams({
+							'cv_content': quill.root.innerHTML,
+							'suggestion': suggestion
+						})
+					})
+						.then(response => response.json())
+						.then(data => {
+							quill.root.innerHTML = ''; 
+							quill.clipboard.dangerouslyPasteHTML(0, data.updated_cv_content);
+						})
+						.catch(error => console.error('Error applying suggestion:', error));
+				}
+			});
 
-    // Toggle the dropdown menu visibility
-    document.getElementById('download-btn').addEventListener('click', function() {
-      var dropdown = document.getElementById('download-dropdown');
-      dropdown.style.display = (dropdown.style.display === 'none' || dropdown.style.display === '') ? 'block' : 'none';
-    });
+			// Toggle the dropdown menu visibility
+			document.getElementById('download-btn').addEventListener('click', function() {
+				var dropdown = document.getElementById('download-dropdown');
+				dropdown.style.display = (dropdown.style.display === 'none' || dropdown.style.display === '') ? 'block' : 'none';
+			});
 
-    // Close the dropdown when clicking outside of it
-    document.addEventListener('click', function(event) {
-      var dropdown = document.getElementById('download-dropdown');
-      var downloadButton = document.getElementById('download-btn');
-      if (!dropdown.contains(event.target) && event.target !== downloadButton) {
-        dropdown.style.display = 'none';
-      }
-    });
+			// Close the dropdown when clicking outside of it
+			document.addEventListener('click', function(event) {
+				var dropdown = document.getElementById('download-dropdown');
+				var downloadButton = document.getElementById('download-btn');
+				if (!dropdown.contains(event.target) && event.target !== downloadButton) {
+					dropdown.style.display = 'none';
+				}
+			});
 
-    // Event listener for downloading as PDF
-    document.getElementById('download-pdf').addEventListener('click', function(event) {
-      event.preventDefault();
-      var cvContent = quill.root.innerHTML;
+			// Event listener for downloading as PDF
+			document.getElementById('download-pdf').addEventListener('click', function(event) {
+				event.preventDefault();
+				var cvContent = quill.root.innerHTML;
 
-      fetch('/download_pdf/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: new URLSearchParams({
-          'cv_content': cvContent
-        })
-      })
-      .then(response => response.blob())
-      .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = "tailored_cv.pdf";  // Filename for download
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      })
-      .catch(error => console.error('Error downloading PDF:', error));
-    });
-  });
-</script>
+				fetch('/download_pdf/', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'X-CSRFToken': '{{ csrf_token }}'
+					},
+					body: new URLSearchParams({
+						'cv_content': cvContent
+					})
+				})
+					.then(response => response.blob())
+					.then(blob => {
+						const url = window.URL.createObjectURL(blob);
+						const a = document.createElement('a');
+						a.href = url;
+						a.download = "tailored_cv.pdf";  // Filename for download
+						document.body.appendChild(a);
+						a.click();
+						a.remove();
+					})
+					.catch(error => console.error('Error downloading PDF:', error));
+			});
 
-  </body>
+			document.addEventListener('click', async function(event) {
+				if (event.target.classList.contains('suggestion-button')) {
+					const suggestion = event.target.textContent.trim();
+					const currentText = quill.getText();
+
+					const response = await fetch('/api/implement-suggestion', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ text: currentText, suggestion: suggestion })
+					});
+
+					const result = await response.json();
+					handleOpenAIResponse(result); // To handle response and render
+				}
+			});
+
+		});
+		</script>
+
+	</body>
 </html>

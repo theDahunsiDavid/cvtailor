@@ -8,6 +8,7 @@ from openai import OpenAI
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 from django.http import JsonResponse, HttpResponse
 from docx import Document
+from difflib import ndiff
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from .models import JobApplication
@@ -301,4 +302,35 @@ def implement_suggestion(request):
     )
 
     modified_text = response.choices[0].message.content
-    return JsonResponse({"modified_text": modified_text})
+
+    highlighted_text = highlight_changes(text, modified_text)
+
+    return JsonResponse({"highlighted_text": highlighted_text})
+
+def highlight_changes(original_text: str, modified_text: str) -> str:
+    """
+    Compares original and modified text & highlights differences.
+
+    Args:
+        original_text (str): original CV text.
+        modified_text (str): modified CV text w/ suggestion implemented.
+
+    Returns:
+        str: modified text w/ only changes highlighted.
+    """
+    highlighted_text = ""
+    diff = ndiff(original_text.split(), modified_text.split())
+
+    for token in diff:
+        # Tokens prefixed w/ "+" are additions in modified_text
+        if token.startswith("+ "):
+            highlighted_text += f'<span class="highlighted-change">{token[2:]}</span> '
+        elif token.startswith("- "):
+            # Ignore deletions from original_text
+            continue
+        else:
+            # Tokens that are the same in both texts
+            highlighted_text += token[2:] + " "
+
+    return highlighted_text.strip()
+

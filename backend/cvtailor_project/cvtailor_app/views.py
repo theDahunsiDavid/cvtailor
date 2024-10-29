@@ -113,12 +113,12 @@ def generate_ats_format_and_match_score(cv_content, job_description):
             f"Remove any empty lines between a section title/heading and its content."
             f"Do not separate sections with '---' or the likes."
             f"Do not end your response with '---' or the likes."
-            f"If the first line is a name, capitalize it, and put other personal data like name, address, email, contact info, and other identifying details under the name (in capital letters) with no empty line between them."
+            f"If the first line is a name, capitalize it, and put other personal data like name, address, email, contact info, and other identifying details under the capitalized name with no empty line between them."
             f"Format each job entry as 'Company Name (Position) [Date Range]' and include a bullet point list of responsibilities under each position. Do not format each job entry with a bullet point like '- Company Name (Position) [Date Range]'. Use hyphens in the Date Ranges. Do not use en dash or em dash in the Date Ranges."
             f"Format the WORK EXPERIENCE section in reverse-chronological order."
             f"Use simple headings for section titles, and ensure all sections are clearly separated without unnecessary commas or separators."
             f"Format the WORK EXPERIENCE section in reverse-chronological format."
-            f"Always include a Match Score (out of 100) that indicates how closely the CV matches the job description as exactly 'Match Score: X/100' where X is a number and is the Match Score. Always include suggestions to improve the Match Score as 'Suggestions to improve Match Score: Y' where Y is the suggestions."
+            f"Always include a Match Score (out of 100) that indicates how closely the CV matches the job description as exactly 'Match Score: X/100' where X is a number and is the Match Score. Always include numbered suggestions to improve the Match Score as 'Suggestions to improve Match Score: Y' where Y is the numbered suggestions."
             f"Proofread and edit the contents of all the sections. Fix all the grammatical errors or typos in the contents of all the sections."
             f"Capitalize all section titles. That is, capitalize all section headers."
             f"Double-check that all sections and responsibilities from the original CV are included in your response.\n"
@@ -128,10 +128,12 @@ def generate_ats_format_and_match_score(cv_content, job_description):
 
 
         # Call OpenAI API to generate ATS content
-        response = client.chat.completions.create(model="gpt-3.5-turbo",
-        messages=[
-            {"role": "user", "content": prompt}
-        ])
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
 
         # Print the raw response for debugging
         # print("OpenAI Response:", response)
@@ -139,7 +141,12 @@ def generate_ats_format_and_match_score(cv_content, job_description):
         # Extract ATS content from the response
         ats_content = response.choices[0].message.content
 
+        print("RESPONSE:")
+        print(ats_content)
+        print("---")
+
         suggestions = extract_suggestions(ats_content)  # Function to extract suggestions from the response
+        print(suggestions)
 
         # print("Extracted Suggestions:", suggestions)
         # print("---")
@@ -194,12 +201,13 @@ def extract_suggestions(ats_response):
     suggestions_section = re.search(r'Suggestions to improve Match Score:\s*(.*?)(?=\n\n|\Z)', ats_response, re.DOTALL | re.IGNORECASE)
     if suggestions_section:
         suggestions_text = suggestions_section.group(1).strip()
-        return suggestions_text.split("\n")  # Split suggestions into a list
+        return [suggestion.strip() for suggestion in suggestions_text.split("\n")]  # Split suggestions into a list
     return []
 
+"""
 @csrf_exempt  # Add CSRF exemption if needed
 def apply_suggestion(request):
-    """View to apply a suggestion to the current CV content."""
+    # View to apply a suggestion to the current CV content.
     if request.method == "POST":
         try:
             # Extract current CV content and the suggestion from the request
@@ -215,7 +223,7 @@ def apply_suggestion(request):
             return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=500)
 
 def apply_suggestion_to_cv(cv_content, suggestion):
-    """
+
     Applies a specific suggestion to the CV content.
 
     Args:
@@ -224,7 +232,7 @@ def apply_suggestion_to_cv(cv_content, suggestion):
 
     Returns:
         str: The updated CV content after applying the suggestion.
-    """
+
     try:
         # Here, implement the logic to modify the CV based on the suggestion.
         # You might want to use different rules based on the suggestion text.
@@ -246,7 +254,7 @@ def apply_suggestion_to_cv(cv_content, suggestion):
     except Exception as e:
         print(f"Error applying suggestion: {e}")
         return cv_content  # Return unmodified content if there's an error
-"""
+
 def download_docx(request):
     # Get the tailored CV content from the request
     cv_content = request.POST.get('cv_content', '')

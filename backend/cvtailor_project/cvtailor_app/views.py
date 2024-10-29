@@ -287,3 +287,21 @@ def download_pdf(request):
     response['Content-Disposition'] = 'attachment; filename="tailored_cv.pdf"'
 
     return response
+
+def implement_suggestion(request):
+    """Processes the request to implement suggestion in CV text."""
+    data = json.loads(request.body)
+    text = data['text']
+    suggestion = data['suggestion']
+
+    # Call OpenAI API to implement suggestion in CV text.
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "Please modify the provided CV text based on the user's suggestion without altering unrelated sections."},
+            {"role": "user", "content": f"CV Text: {text}\n\nSuggestion: {suggestion}"}
+        ]
+    )
+
+    modified_text = response.choices[0].message.content
+    return JsonResponse({"modified_text": modified_text})

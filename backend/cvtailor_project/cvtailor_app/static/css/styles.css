@@ -301,3 +301,28 @@ input[type="password"] {
 #download-btn:hover {
 	background-color: #444;
 }
+
+.highlighted-change {
+    background-color: #ffeb3b; /* Yellow highlight */
+    padding: 2px;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+
+.highlighted-change button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 10px;
+    margin-left: 5px;
+}
+
+.highlighted-change button:hover {
+    text-decoration: underline;
+}
+
+.accepted-change {
+    background-color: #c8e6c9; /* Green background for accepted changes */
+}
+

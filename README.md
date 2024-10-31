@@ -8,8 +8,7 @@ CV Tailor is a web application designed to help users create and customize their
 2. [Installation](#installation)
 3. [Usage](#usage)
 4. [File Structure](#file-structure)
-5. [Contributing](#contributing)
-6. [License](#license)
+5. [License](#license)
 
 ## Prerequisites
 

@@ -1,6 +1,6 @@
 # CV Tailor
 
-CV Tailor is a web application designed to help users create and customize their CVs. This guide will walk you through the installation and usage of the application.
+CV Tailor is a web application designed to help users create and customize their resumes. This guide will walk you through the installation and usage of the application.
 
 ## Table of Contents
 
@@ -52,3 +52,51 @@ Before you begin, ensure you have the following installed:
     ```bash
     python manage.py createsuperuser
     ```
+
+6. Run the server:
+
+    ```bash
+    python manage.py runserver
+    ```
+
+7. Access the application in your browser at `http://127.0.0.1:8000/`.
+
+## Usage
+
+- Creating a CV: After logging in, navigate to the CV creation page where you can enter your details and select a template.
+
+- Editing a CV: You can edit your saved CVs at any time by selecting them from your dashboard.
+
+- Admin Panel: Access the admin panel at `http://127.0.0.1:8000/admin/ using the superuser credentials you created.
+
+## File Structure
+
+```plaintext
+cvtailor/
+├── cvtailor_app/
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── migrations/
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py
+│   ├── views.py
+│   └── templates/
+│       └── ... (your HTML templates)
+├── cvtailor_project/
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+└── static/
+    └── ... (your static files like CSS, JS)
+```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+```typescript
+Feel free to copy and save this as `README.md`! Let me know if you need any changes.
+```

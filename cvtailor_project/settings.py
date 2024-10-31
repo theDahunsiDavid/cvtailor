@@ -82,14 +82,7 @@ WSGI_APPLICATION = 'cvtailor_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cvtailor_db',
-        'USER': 'dre',
-        'PASSWORD': 'Passw0rd,567890.',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': env.db()
 }
 
 

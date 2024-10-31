@@ -131,7 +131,7 @@ def generate_ats_format_and_match_score(cv_content, job_description):
             model="gpt-4o",
             messages=[
                 {"role": "user", "content": prompt}
-            ]
+            ],
         )
 
         # Print the raw response for debugging

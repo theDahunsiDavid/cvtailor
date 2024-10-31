@@ -141,7 +141,7 @@ def generate_ats_format_and_match_score(cv_content, job_description):
         ats_content = response.choices[0].message.content
 
         suggestions = extract_suggestions(ats_content)  # Function to extract suggestions from the response
-        print(suggestions)
+        # print(suggestions)
 
         # print("Extracted Suggestions:", suggestions)
         # print("---")

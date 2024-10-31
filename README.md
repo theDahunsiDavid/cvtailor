@@ -62,11 +62,11 @@ Before you begin, ensure you have the following installed:
 
 ## Usage
 
-- Creating a CV: After logging in, navigate to the CV creation page where you can enter your details and select a template.
+- Upload Your CV and the Job Description: Once you access the application, you'll be directed to the home page where you can attach your CV and paste the job description. Then click on, "Tailor My CV."
 
-- Editing a CV: You can edit your saved CVs at any time by selecting them from your dashboard.
+- Tailor Your CV: Your CV and the job description will be loaded on the preview page. Click the button below the sidebar once and wait for the tailored text.
 
-- Admin Panel: Access the admin panel at `http://127.0.0.1:8000/admin/` using the superuser credentials you created.
+- Implement suggestions: A match score will rate how well your resume matches the job description. You will also receive suggestions on how to improve the match score. Suggestions will soon be auto-implementable with a click.
 
 ## File Structure
 

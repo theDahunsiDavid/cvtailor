@@ -66,7 +66,7 @@ Before you begin, ensure you have the following installed:
 
 - Editing a CV: You can edit your saved CVs at any time by selecting them from your dashboard.
 
-- Admin Panel: Access the admin panel at `http://127.0.0.1:8000/admin/ using the superuser credentials you created.
+- Admin Panel: Access the admin panel at `http://127.0.0.1:8000/admin/` using the superuser credentials you created.
 
 ## File Structure
 

@@ -98,5 +98,5 @@ cvtailor/
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ```typescript
-Feel free to copy and save this as `README.md`! Let me know if you need any changes.
+Feel free to reach out to me at `gbemigadare@gmail.com`! Let me know if you need any changes.
 ```

@@ -72,7 +72,7 @@
 		</header>
 
 		<h1>Preview Your CV</h1>
-	<p>Download it in any format when you're ready.</p>
+		<p>Download it in any format when you're ready.</p>
 
 		<!-- Container for CV content and job description -->
 		<div id="content-container">
@@ -182,7 +182,20 @@
 		<script>
 		document.addEventListener('DOMContentLoaded', function() {
 			// Initialize Quill for CV content
+
+			// First, define toolbar options
+			var toolbarOptions = [
+				['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+				[{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
+				[{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+				[{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+				[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+			];
+
 			var quill = new Quill('#quill-editor', {
+				modules: {
+					toolbar: toolbarOptions
+					},
 				theme: 'snow',
 				readOnly: false
 			});
@@ -197,7 +210,10 @@
 			// Initialize Quill for Job Description
 			var jobDescriptionEditor = new Quill('#job-description-editor', {
 				theme: 'snow',
-				readOnly: false
+				// readOnly: false,
+				modules: {
+					toolbar: false
+				}
 			});
 			jobDescriptionEditor.clipboard.dangerouslyPasteHTML(0, formatJobDescription("{{ job_description|escapejs|safe }}"));
 

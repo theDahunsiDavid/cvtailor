@@ -7,17 +7,53 @@ import pdfkit #note: ensure wkhtmltopdf is already installed
 from django.conf import settings
 from openai import OpenAI
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
-from django.http import JsonResponse, HttpResponse
 from docx import Document
 from difflib import ndiff
 from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model, login
+from django.contrib.auth import logout, authenticate
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse, HttpResponse
+from django.urls import reverse
+from django.contrib import messages
 from .models import JobApplication
 from .forms import JobApplicationForm
 
 # Home view for landing page
 def home(request):
     return render(request, 'index.html')
+
+
+def signUp(request):
+    """
+    Custom signup view for user registration.
+
+    Handles:
+        - GET requests to display the signupu form.
+        - POST requests to process user registration.
+    """
+    User = get_user_model()
+
+    if request.user.is_authenticated:
+        " If user's already logged in, redirec to home
+        return redirect(reverse('home'))
+
+        # Capture next param from URL to redirect user after signup
+        next_url = request.GET.get('next', reverse('home'))
+
+        if request.method == 'POST':
+            email = request.POST.get('signup-email', '').strip()
+            password = request.POST.get('signup-password', '').strip()
+            confirm_password = request.POST.get(
+                'confirm-password',
+                ''
+            ).strip()
+
+            # Validate form inputs
+            if not email or not password or not confirm_password:
+                messages.error(request, "All fields are required.")
+                return redirect(reverse(
+
 
 # CV upload view
 def upload_cv(request):

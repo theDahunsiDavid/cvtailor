@@ -35,7 +35,7 @@ def signUp(request):
     User = get_user_model()
 
     if request.user.is_authenticated:
-        " If user's already logged in, redirec to home
+        # If user's already logged in, redirec to home
         return redirect(reverse('home'))
 
     # Capture next param from URL to redirect user after signup
@@ -76,6 +76,54 @@ def signUp(request):
             'success': True,
             'redirect_url': next_url
         })
+
+    return JsonResponse({
+        'success': False,
+        'errors': {'general': "Invalid request method."}
+    })
+
+
+def signIn(request):
+    """Logs the user into their account."""
+    if request.method == 'POST':
+        email = request.POST.get('login-email', '').strip()
+        password = request.POST.get('login-password', '').strip()
+
+        errors = {}
+
+        # Validate the user inputs
+        if not email:
+            errors['email'] = "Email is required."
+        if not password:
+            errors['password'] = "Password is required."
+
+        if errors:
+            return JsonResponse({
+                'success': False,
+                'errors': errors
+            })
+
+        # Now, we authenticate the user:
+        user = authenticate(
+            request,
+            username=email,
+            password=password
+        )
+
+        if user is not None:
+            login(request, user)
+
+            next_url = request.GET.get('next', reverse('home'))
+            return JsonResponse({
+                'success': True,
+                'redirect_url': next_url
+            })
+        else:
+            errors['general'] = "Invalid email or password."
+            return JsonResponse({
+                'success': False,
+                'errors': errors
+            })
 
     return JsonResponse({
         'success': False,

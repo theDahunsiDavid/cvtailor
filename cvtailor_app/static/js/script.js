@@ -1,16 +1,16 @@
 // Sign up page dynamic interactions
 function openSignupModal() {
 	document.getElementById("login-modal").style.display = "none";
-  document.getElementById("signup-modal").style.display = "block";
+	document.getElementById("signup-modal").style.display = "block";
 }
 
 function openLoginModal() {
 	document.getElementById("signup-modal").style.display = "none";
-  document.getElementById("login-modal").style.display = "block";
+	document.getElementById("login-modal").style.display = "block";
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  const signupBtn = document.getElementById('signupBtn');
+	const signupBtn = document.getElementById('signupBtn');
 	const loginBtn = document.getElementById('loginBtn');
 	const signupModal = document.getElementById('signup-modal');
 	const loginModal = document.getElementById('login-modal');
@@ -66,4 +66,95 @@ document.addEventListener('DOMContentLoaded', function() {
 		// Signup logic to send data to server/database
 		window.location.href = document.referrer;
 	};
+});
+
+document.getElementById('signup-form').addEventListener('submit', function(event) {
+	event.preventDefault();
+
+
+	const email = document.getElementById('signup-email').value.trim();
+	const password = document.getElementById('signup-password').value.trim();
+	const confirmPassword = document.getElementById('confirm-password').value.trim();
+
+
+	fetch("{% url 'signup' %}", {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+		},
+		body: JSON.stringify({
+			'signup-email': email,
+			'signup-password': password,
+			'confirm-password': confirmPassword
+		})
+	})
+		.then(response => response.json())
+		.then(data => {
+			if (data.success) {
+				window.location.href = data.redirect_url; // Redirect to the 'next' URL or home page
+			} else {
+				// Display errors
+				for (let error in data.errors) {
+					const errorMessage = document.createElement('p');
+					errorMessage.textContent = data.errors[error];
+					errorsDiv.appendChild(errorMessage);
+				}
+			}
+		});
+});
+
+// Function to handle the sign-in form submission
+document.getElementById('signInForm').addEventListener('submit', function(event) {
+	event.preventDefault(); // Prevent the form from submitting normally
+
+	// Collect form data
+	const email = document.getElementById('login-email').value.trim();
+	const password = document.getElementById('login-password').value.trim();
+
+	const errorsDiv = document.getElementById('login-errors');
+	errorsDiv.innerHTML = ''; // Clear any previous error messages
+
+	// Send AJAX request to the backend
+	fetch("{% url 'signin' %}", {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+		},
+		body: JSON.stringify({
+			'login-email': email,
+			'login-password': password
+		})
+	})
+		.then(response => response.json())
+		.then(data => {
+			if (data.success) {
+				window.location.href = data.redirect_url; // Redirect to the 'next' URL or home page
+			} else {
+				// Display errors
+				for (let error in data.errors) {
+					const errorMessage = document.createElement('p');
+					errorMessage.textContent = data.errors[error];
+					errorsDiv.appendChild(errorMessage);
+				}
+			}
+		});
+});
+
+// Function to handle sign-out
+document.getElementById('signOutButton').addEventListener('click', function() {
+	// Send request to log the user out
+	fetch("{% url 'signout' %}", {
+		method: 'POST',
+		headers: {
+			'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+		}
+	})
+		.then(response => response.json())
+		.then(data => {
+			if (data.success) {
+				window.location.href = data.redirect_url; // Redirect to home page
+			}
+		});
 });

@@ -38,21 +38,50 @@ def signUp(request):
         " If user's already logged in, redirec to home
         return redirect(reverse('home'))
 
-        # Capture next param from URL to redirect user after signup
-        next_url = request.GET.get('next', reverse('home'))
+    # Capture next param from URL to redirect user after signup
+    next_url = request.GET.get('next', reverse('home'))
 
-        if request.method == 'POST':
-            email = request.POST.get('signup-email', '').strip()
-            password = request.POST.get('signup-password', '').strip()
-            confirm_password = request.POST.get(
-                'confirm-password',
-                ''
-            ).strip()
+    if request.method == 'POST':
+        email = request.POST.get('signup-email', '').strip()
+        password = request.POST.get('signup-password', '').strip()
+        confirm_password = request.POST.get(
+            'confirm-password',
+            ''
+        ).strip()
 
-            # Validate form inputs
-            if not email or not password or not confirm_password:
-                messages.error(request, "All fields are required.")
-                return redirect(reverse(
+        errors = {}
+
+        # Validate form inputs
+        if not email:
+            errors['email'] = "Email is required."
+        if not password:
+            errors['password'] = "Password is required."
+        if password != confirm_password:
+            errors['confirm_password'] = "Passwords don't match."
+        if User.objects.filter(email=email).exists():
+            errors['email'] = "Email already used by someone else."
+
+        if errors:
+            return JsonResponse({
+                'success': False,
+                'errors': errors
+            })
+
+        # Now, creating the user & logging them in:
+        user = User.objects.create_user(email=email, password=password)
+        user.save()
+        login(request, user)
+
+        return JsonResponse({
+            'success': True,
+            'redirect_url': next_url
+        })
+
+    return JsonResponse({
+        'success': False,
+        'errors': {'general': "Invalid request method."}
+    })
+
 
 
 # CV upload view

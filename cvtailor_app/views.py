@@ -131,6 +131,10 @@ def signIn(request):
     })
 
 
+def signOut(request):
+    """Logs the user out of their cvtailor account."""
+    logout(request)
+    return redirect('home')
 
 # CV upload view
 def upload_cv(request):

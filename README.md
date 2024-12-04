@@ -1,6 +1,8 @@
 # CV Tailor
 
-CV Tailor is a web application designed to help users create and customize their resumes. This guide will walk you through the installation and usage of the application.
+CV Tailor is a web application built to help job applicants tailor their resumes to various job descriptions with ease.
+
+This guide will walk you through the installation and usage of the application.
 
 ## Table of Contents
 
@@ -17,6 +19,8 @@ Before you begin, ensure you have the following installed:
 - Python 3.x
 - Django 3.x or above
 - pip (Python package installer)
+- A PostgreSQL database
+- An OpenAI API key
 
 ## Installation
 

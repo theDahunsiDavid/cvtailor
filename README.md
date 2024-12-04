@@ -86,9 +86,19 @@ To run this web app locally, ensure you have the following installed:
 
 ## Usage
 
-- Upload Your CV and the Job Description: Once you access the application, you'll be directed to the home page where you can attach your CV and paste the job description. Then click on, "Tailor My CV."
+- Upload Your CV and the Job Description:
 
-- Tailor Your CV: Your CV and the job description will be loaded on the preview page. Click the button below the sidebar once and wait for the tailored text.
+![CV Tailor Upload functionality GIF demo](demo-upload.gif)
+
+Once you access the application, you'll be directed to the home page where you can attach your CV and paste the job description. Then click on, "Tailor My CV."
+
+- Tailor Your CV:
+
+![CV Tailor Preview page picture](demo-preview.png)
+
+Your CV and the job description will be loaded on the preview page. Click the button below the sidebar once and wait for the tailored text.
+
+![CV Tailor tailoring an uploaded resume GIF](demo-tailored.gif)
 
 - Implement suggestions: A match score will rate how well your resume matches the job description. You will also receive suggestions on how to improve the match score. Suggestions will soon be auto-implementable with a click.
 

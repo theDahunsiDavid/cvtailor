@@ -16,11 +16,14 @@ This guide will walk you through the installation and usage of the application.
 
 Before you begin, ensure you have the following installed:
 
+- A Linux (OS)
 - Python 3.x
 - Django 3.x or above
 - pip (Python package installer)
 - A PostgreSQL database
 - An OpenAI API key
+- LibreOffice (package installed)
+- wkhtmltopdf (CLI tool installed with necessary dependencies for your OS)
 
 ## Installation
 

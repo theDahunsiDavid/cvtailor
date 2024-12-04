@@ -31,38 +31,55 @@ Before you begin, ensure you have the following installed:
     cd cvtailor
     ```
 
-2. Create a virtual environment:
+2. Plug in your database and OpenAI API key details in Django settings.
+
+    ```bash
+    vim cvtailor_project/.env  # Create a .env file to store your secrets
+    ```
+    
+    ```
+    # Add your secrets in this format.
+    DJANGO_SECRET_KEY='xxx'
+    DJANGO_DEBUG=True
+    DATABASE_URL=postgres://{your-database-username}:{password}@{hostname}:{port}/{databasee-name}
+    POSTGRES_USER={your-database-username}
+    POSTGRES_PASSWORD={password}
+    POSTGRES_DB={database-name}
+    OPENAI_API_KEY=xxx
+    ```
+
+3. Create a virtual environment:
 
     ```bash
     python -m venv venv
     source venv/bin/activate    # On Windows, use `venv\Scripts\activate`
     ```
 
-3. Install the required packages:
+4. Install the required packages:
 
     ```bash
     pip install -r requirements.txt
     ```
 
-4. Run migrations:
+5. Run migrations:
 
     ```bash
     python manage.py migrate
     ```
 
-5. Create a superuser (optional, for admin access):
+6. Create a superuser (optional, for admin access):
 
     ```bash
     python manage.py createsuperuser
     ```
 
-6. Run the server:
+7. Run the server:
 
     ```bash
     python manage.py runserver
     ```
 
-7. Access the application in your browser at `http://127.0.0.1:8000/`.
+8. Access the application in your browser at `http://127.0.0.1:8000/`.
 
 ## Usage
 

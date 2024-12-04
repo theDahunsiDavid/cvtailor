@@ -77,7 +77,7 @@ document.getElementById('signup-form').addEventListener('submit', function(event
 	const confirmPassword = document.getElementById('confirm-password').value.trim();
 
 
-	fetch("{% url 'signup' %}", {
+	fetch("{% url 'signUp' %}", {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -92,31 +92,25 @@ document.getElementById('signup-form').addEventListener('submit', function(event
 		.then(response => response.json())
 		.then(data => {
 			if (data.success) {
-				window.location.href = data.redirect_url; // Redirect to the 'next' URL or home page
+				window.location.href = data.redirect_url;
 			} else {
-				// Display errors
 				for (let error in data.errors) {
 					const errorMessage = document.createElement('p');
 					errorMessage.textContent = data.errors[error];
-					errorsDiv.appendChild(errorMessage);
 				}
 			}
 		});
 });
 
 // Function to handle the sign-in form submission
-document.getElementById('signInForm').addEventListener('submit', function(event) {
-	event.preventDefault(); // Prevent the form from submitting normally
+document.getElementById('login-form').addEventListener('submit', function(event) {
+	event.preventDefault();
 
-	// Collect form data
+
 	const email = document.getElementById('login-email').value.trim();
 	const password = document.getElementById('login-password').value.trim();
 
-	const errorsDiv = document.getElementById('login-errors');
-	errorsDiv.innerHTML = ''; // Clear any previous error messages
-
-	// Send AJAX request to the backend
-	fetch("{% url 'signin' %}", {
+	fetch("{% url 'signIn' %}", {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -130,13 +124,11 @@ document.getElementById('signInForm').addEventListener('submit', function(event)
 		.then(response => response.json())
 		.then(data => {
 			if (data.success) {
-				window.location.href = data.redirect_url; // Redirect to the 'next' URL or home page
+				window.location.href = data.redirect_url;
 			} else {
-				// Display errors
 				for (let error in data.errors) {
 					const errorMessage = document.createElement('p');
 					errorMessage.textContent = data.errors[error];
-					errorsDiv.appendChild(errorMessage);
 				}
 			}
 		});

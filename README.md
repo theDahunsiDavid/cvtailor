@@ -14,9 +14,9 @@ This guide will walk you through the installation and usage of the application.
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed:
+To run this web app locally, ensure you have the following installed:
 
-- A Linux (OS)
+- A Linux distro
 - Python 3.x
 - Django 3.x or above
 - pip (Python package installer)

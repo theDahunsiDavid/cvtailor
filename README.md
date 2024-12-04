@@ -38,7 +38,7 @@ Before you begin, ensure you have the following installed:
     ```
     
     ```
-    # Add your secrets in this format.
+    # Add your secrets in the .env file in this format.
     DJANGO_SECRET_KEY='xxx'
     DJANGO_DEBUG=True
     DATABASE_URL=postgres://{your-database-username}:{password}@{hostname}:{port}/{databasee-name}

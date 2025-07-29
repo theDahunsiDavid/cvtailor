@@ -3,11 +3,15 @@ import os
 import re
 import io
 import json
+import html
 import pdfkit #note: ensure wkhtmltopdf is already installed
 from django.conf import settings
 from openai import OpenAI
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 from docx import Document
+from docx.text.run import Run
+from docx.text.paragraph import Paragraph
+from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from difflib import ndiff
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model, login
@@ -19,7 +23,6 @@ from django.contrib import messages
 from .models import JobApplication
 from .forms import JobApplicationForm
 
-# Home view for landing page
 def home(request):
     return render(request, 'index.html')
 
@@ -35,10 +38,8 @@ def signUp(request):
     User = get_user_model()
 
     if request.user.is_authenticated:
-        # If user's already logged in, redirec to home
         return redirect(reverse('home'))
 
-    # Capture next param from URL to redirect user after signup
     next_url = request.GET.get('next', reverse('home'))
 
     if request.method == 'POST':
@@ -51,7 +52,6 @@ def signUp(request):
 
         errors = {}
 
-        # Validate form inputs
         if not email:
             errors['email'] = "Email is required."
         if not password:
@@ -67,7 +67,6 @@ def signUp(request):
                 'errors': errors
             })
 
-        # Now, creating the user & logging them in:
         user = User.objects.create_user(email=email, password=password)
         user.save()
         login(request, user)
@@ -91,7 +90,6 @@ def signIn(request):
 
         errors = {}
 
-        # Validate the user inputs
         if not email:
             errors['email'] = "Email is required."
         if not password:
@@ -103,7 +101,6 @@ def signIn(request):
                 'errors': errors
             })
 
-        # Now, we authenticate the user:
         user = authenticate(
             request,
             username=email,
@@ -136,7 +133,6 @@ def signOut(request):
     logout(request)
     return redirect('home')
 
-# CV upload view
 def upload_cv(request):
     if request.method == 'POST':
         form = JobApplicationForm(request.POST, request.FILES)
@@ -148,22 +144,240 @@ def upload_cv(request):
 
     return render(request, 'index.html', {'form': form})
 
-# Convert DOCX to HTML using LibreOffice in headless mode
 def convert_docx_to_html(docx_file):
-    """Converts a DOCX file to HTML using LibreOffice in headless mode."""
+    """Converts a DOCX file to HTML."""
     try:
-        if not os.path.isfile(docx_file):
-            raise FileNotFoundError(f"The file {docx_file} does not exist.")
+    #     if not os.path.isfile(docx_file):
+    #         raise FileNotFoundError(f"The file {docx_file} does not exist.")
+    #
+    #     output_file = os.path.splitext(docx_file)[0] + '.html'
+    #     command = ['libreoffice', '--headless', '--convert-to', 'html', '--outdir', os.path.dirname(docx_file), docx_file]
+    #     subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #
+    #     return output_file
+    #
+    # except subprocess.CalledProcessError as e:
+    #     print(f"Error during conversion: {e.stderr.decode()}")
+    #     return None
+        if docx_file and docx_file.name.endswith('.docx'):
+            # doc = Document(docx_file)
+            # html_content = []
+            # 
+            # # Get document relationships
+            # doc_rels = {
+            #     rid: rel.target_ref for rid, rel in doc.part.rels.items() 
+            #     if rel.reltype == RT.HYPERLINK
+            # }
+            #
+            # for paragraph in doc.paragraphs:
+            #     if not paragraph.text.strip():
+            #         continue
+            #
+            #     para_html = []
+            #     if paragraph._p.pPr.numPr is not None:
+            #         para_html.append('<li>')
+            #     else:
+            #         para_html.append('<p>')
+            #
+            #     # Process the paragraph's XML structure
+            #     for element in paragraph._element:
+            #         if element.tag.endswith('hyperlink'):
+            #             # Handle hyperlinks safely
+            #             rel_id = element.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
+            #             if rel_id and rel_id in doc_rels:
+            #                 url = doc_rels[rel_id]
+            #                 # Safer text extraction
+            #                 texts = []
+            #                 for run in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}r'):
+            #                     t_element = run.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
+            #                     if t_element is not None and t_element.text:
+            #                         texts.append(html.escape(t_element.text))
+            #                 
+            #                 hyperlink_text = ''.join(texts)
+            #                 if hyperlink_text:  # Only add if we have text
+            #                     para_html.append(f'<a href="{url}">{hyperlink_text}</a>')
+            #         elif element.tag.endswith('r'):
+            #             # Handle regular runs
+            #             run_text = ''.join(
+            #                 html.escape(child.text or '') 
+            #                 for child in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
+            #             )
+            #             # Apply formatting
+            #             rPr = element.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rPr')
+            #             if rPr is not None:
+            #                 if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}b') is not None:
+            #                     run_text = f'<strong>{run_text}</strong>'
+            #                 if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}i') is not None:
+            #                     run_text = f'<em>{run_text}</em>'
+            #             para_html.append(run_text)
+            #
+            #     if paragraph._p.pPr.numPr is not None:
+            #         para_html.append('</li>')
+            #     else:
+            #         para_html.append('</p>')
+            #
+            #     html_content.append(''.join(para_html))
+            # 
+            # resume_text = '\n\n'.join(html_content)
+            # # print(f"Custom conversion done: {resume_text[:500]}...")
+            #
+            # return resume_text
+            doc = Document(docx_file)
+            html_content = []
+            
+            # Get document relationships
+            doc_rels = {
+                rid: rel.target_ref for rid, rel in doc.part.rels.items() 
+                if rel.reltype == RT.HYPERLINK
+            }
+            
+            # Check if we're inside a list
+            in_list = False
+            list_items = []
+            
+            for paragraph in doc.paragraphs:
+                if not paragraph.text.strip() and not in_list:
+                    # Add empty paragraphs to preserve spacing
+                    html_content.append('<p><br></p>')
+                    continue
 
-        output_file = os.path.splitext(docx_file)[0] + '.html'
-        command = ['libreoffice', '--headless', '--convert-to', 'html', '--outdir', os.path.dirname(docx_file), docx_file]
-        subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                # Determine paragraph style and indentation
+                is_list_item = paragraph._p.pPr is not None and paragraph._p.pPr.numPr is not None
+                
+                # Handle list items
+                if is_list_item:
+                    if not in_list:
+                        in_list = True
+                        list_items = []
+                    
+                    # Process list item content
+                    item_content = []
+                    
+                    # Process the paragraph's XML structure
+                    for element in paragraph._element:
+                        if element.tag.endswith('hyperlink'):
+                            # Handle hyperlinks safely
+                            rel_id = element.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
+                            if rel_id and rel_id in doc_rels:
+                                url = doc_rels[rel_id]
+                                # Safer text extraction
+                                texts = []
+                                for run in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}r'):
+                                    t_element = run.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
+                                    if t_element is not None and t_element.text:
+                                        texts.append(html.escape(t_element.text))
+                                
+                                hyperlink_text = ''.join(texts)
+                                if hyperlink_text:  # Only add if we have text
+                                    item_content.append(f'<a href="{url}">{hyperlink_text}</a>')
+                        elif element.tag.endswith('r'):
+                            # Handle regular runs
+                            run_text = ''.join(
+                                html.escape(child.text or '') 
+                                for child in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
+                            )
+                            # Apply formatting
+                            rPr = element.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rPr')
+                            if rPr is not None:
+                                if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}b') is not None:
+                                    run_text = f'<strong>{run_text}</strong>'
+                                if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}i') is not None:
+                                    run_text = f'<em>{run_text}</em>'
+                            item_content.append(run_text)
+                    
+                    list_items.append(''.join(item_content))
+                
+                # End list if we're transitioning out
+                elif in_list:
+                    html_content.append('<ul>\n' + '\n'.join([f'<li>{item}</li>' for item in list_items]) + '\n</ul>')
+                    list_items = []
+                    in_list = False
+                    
+                    # Now process the current paragraph (non-list)
+                    para_html = ['<p>']
+                    
+                    # Process the paragraph's XML structure
+                    for element in paragraph._element:
+                        if element.tag.endswith('hyperlink'):
+                            # Handle hyperlinks safely
+                            rel_id = element.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
+                            if rel_id and rel_id in doc_rels:
+                                url = doc_rels[rel_id]
+                                # Safer text extraction
+                                texts = []
+                                for run in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}r'):
+                                    t_element = run.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
+                                    if t_element is not None and t_element.text:
+                                        texts.append(html.escape(t_element.text))
+                                
+                                hyperlink_text = ''.join(texts)
+                                if hyperlink_text:  # Only add if we have text
+                                    para_html.append(f'<a href="{url}">{hyperlink_text}</a>')
+                        elif element.tag.endswith('r'):
+                            # Handle regular runs
+                            run_text = ''.join(
+                                html.escape(child.text or '') 
+                                for child in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
+                            )
+                            # Apply formatting
+                            rPr = element.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rPr')
+                            if rPr is not None:
+                                if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}b') is not None:
+                                    run_text = f'<strong>{run_text}</strong>'
+                                if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}i') is not None:
+                                    run_text = f'<em>{run_text}</em>'
+                            para_html.append(run_text)
+                    
+                    para_html.append('</p>')
+                    html_content.append(''.join(para_html))
+                
+                else:
+                    # Regular paragraph processing
+                    para_html = ['<p>']
+                    
+                    # Process the paragraph's XML structure
+                    for element in paragraph._element:
+                        if element.tag.endswith('hyperlink'):
+                            # Handle hyperlinks safely
+                            rel_id = element.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
+                            if rel_id and rel_id in doc_rels:
+                                url = doc_rels[rel_id]
+                                # Safer text extraction
+                                texts = []
+                                for run in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}r'):
+                                    t_element = run.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
+                                    if t_element is not None and t_element.text:
+                                        texts.append(html.escape(t_element.text))
+                                
+                                hyperlink_text = ''.join(texts)
+                                if hyperlink_text:  # Only add if we have text
+                                    para_html.append(f'<a href="{url}">{hyperlink_text}</a>')
+                        elif element.tag.endswith('r'):
+                            # Handle regular runs
+                            run_text = ''.join(
+                                html.escape(child.text or '') 
+                                for child in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
+                            )
+                            # Apply formatting
+                            rPr = element.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rPr')
+                            if rPr is not None:
+                                if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}b') is not None:
+                                    run_text = f'<strong>{run_text}</strong>'
+                                if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}i') is not None:
+                                    run_text = f'<em>{run_text}</em>'
+                            para_html.append(run_text)
+                    
+                    para_html.append('</p>')
+                    html_content.append(''.join(para_html))
 
-        return output_file
+            # Flush any remaining list items
+            if in_list and list_items:
+                html_content.append('<ul>\n' + '\n'.join([f'<li>{item}</li>' for item in list_items]) + '\n</ul>')
+            
+            resume_text = '\n'.join(html_content)
+            return resume_text
 
-    except subprocess.CalledProcessError as e:
-        print(f"Error during conversion: {e.stderr.decode()}")
-        return None
+        
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         return None
@@ -176,14 +390,15 @@ def process_uploaded_file(request, file_id):
     job_description = job_application.job_description # Retrieve job description from model
 
     try:
-        html_file = convert_docx_to_html(file_path)
-        if html_file is None or not os.path.isfile(html_file):
+        with open(file_path, 'rb') as file:
+            html_content = convert_docx_to_html(file)
+        if html_content is None:
             # Handle the case where conversion failed
             return HttpResponse("Error converting the document.", status=500)
 
         # Read the content of the HTML file
-        with open(html_file, 'r') as f:
-            html_content = f.read()
+        # with open(html_file, 'r') as f:
+        #     html_content = f.read()
 
         sections = {"CV Content": html_content}
 
@@ -279,14 +494,77 @@ def generate_ats_format_and_match_score(cv_content, job_description):
         ats_content = apply_custom_formatting(ats_content)
 
         # Apply basic formatting (e.g., replacing newlines with <br> for HTML display)
-        formatted_ats_content = ats_content.replace("\n", "<br>")  # Convert newlines to <br> for HTML display
-
+        # formatted_ats_content = ats_content.replace("\n", "<br>")
+        # formatted_ats_content = re.sub(r'\n\n+', '</p><p>', ats_content.replace("\n", "<br>"))
+        # formatted_ats_content = ats_content.replace('\n', '<br>')
+        # formatted_ats_content = f"<div>{formatted_ats_content}</div>"  # Wrap in paragraph tags
+        formatted_ats_content = format_for_quill(ats_content)
         return formatted_ats_content, match_score, suggestions
 
     except Exception as e:
         # Handle any potential errors from OpenAI or the prompt
         print(f"Error generating ATS content and match score: {e}")
         return "Error generating ATS content", "N/A"
+
+def format_for_quill(content):
+    """
+    Format text to be displayed properly in the Quill editor.
+    Preserves paragraphs, line breaks, and lists.
+    """
+    # Identify list items (lines starting with - or *)
+    lines = content.split('\n')
+    html_lines = []
+    in_list = False
+    list_type = None  # 'ul' for unordered, 'ol' for ordered
+    list_items = []
+
+    for line in lines:
+        line = line.strip()
+        # Handle empty lines as paragraph breaks
+        if not line:
+            if in_list:
+                # Close the appropriate list type
+                html_lines.append(f'<{list_type}>\n' + '\n'.join([f'<li>{item}</li>' for item in list_items]) + f'\n</{list_type}>')
+                list_items = []
+                in_list = False
+                list_type = None
+            html_lines.append('<p><br></p>')
+            continue
+        
+        # Check for list items - unordered
+        if line.startswith('-') or line.startswith('•') or line.startswith('*'):
+            if not in_list:
+                in_list = True
+                list_type = 'ul'  # Set list type to unordered
+            item_text = line[1:].strip()  # Remove the bullet character
+            list_items.append(item_text)
+        # Check for list items - ordered (starts with number followed by period or parenthesis)
+        elif re.match(r'^\d+[\.\)]', line):
+            if not in_list:
+                in_list = True
+                list_type = 'ol'  # Set list type to ordered
+            item_text = re.sub(r'^\d+[\.\)]\s*', '', line)  # Remove the number and delimiter
+            list_items.append(item_text)
+        else:
+            # End any ongoing list
+            if in_list:
+                html_lines.append(f'<{list_type}>\n' + '\n'.join([f'<li>{item}</li>' for item in list_items]) + f'\n</{list_type}>')
+                list_items = []
+                in_list = False
+                list_type = None
+            
+            # Check if line is a section header (all caps or starts with capital letter)
+            if line.isupper() or (line[0].isupper() and ':' in line):
+                html_lines.append(f'<h3>{line}</h3>')
+            else:
+                html_lines.append(f'<p>{line}</p>')
+    
+    # Handle any remaining list items
+    if in_list:
+        html_lines.append(f'<{list_type}>\n' + '\n'.join([f'<li>{item}</li>' for item in list_items]) + f'\n</{list_type}>')
+    
+    return '\n'.join(html_lines)
+
 
 def apply_custom_formatting(content):
     """
@@ -390,9 +668,35 @@ def download_docx(request):
 def download_pdf(request):
     # Get the tailored CV content from the request
     cv_content = request.POST.get('cv_content', '')
+    
+    # Wrap the content in proper HTML structure
+    html_document = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            body {{ font-family: Arial, sans-serif; margin: 20px; }}
+            ul {{ list-style-type: disc; }}
+            ol {{ list-style-type: decimal; }}
+            li {{ margin-bottom: 5px; }}
+        </style>
+    </head>
+    <body>
+        {cv_content}
+    </body>
+    </html>
+    """
 
-    # Convert HTML to PDF using pdfkit
-    pdf = pdfkit.from_string(cv_content, False, options={'encoding': "UTF-8"})
+    # Convert HTML to PDF using pdfkit with proper options
+    pdf = pdfkit.from_string(html_document, False, options={
+        'encoding': "UTF-8",
+        'quiet': '',
+        'margin-top': '20mm',
+        'margin-right': '20mm',
+        'margin-bottom': '20mm',
+        'margin-left': '20mm',
+    })
 
     # Create an HTTP response with the PDF file
     response = HttpResponse(pdf, content_type='application/pdf')

@@ -147,120 +147,37 @@ def upload_cv(request):
 def convert_docx_to_html(docx_file):
     """Converts a DOCX file to HTML."""
     try:
-    #     if not os.path.isfile(docx_file):
-    #         raise FileNotFoundError(f"The file {docx_file} does not exist.")
-    #
-    #     output_file = os.path.splitext(docx_file)[0] + '.html'
-    #     command = ['libreoffice', '--headless', '--convert-to', 'html', '--outdir', os.path.dirname(docx_file), docx_file]
-    #     subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    #
-    #     return output_file
-    #
-    # except subprocess.CalledProcessError as e:
-    #     print(f"Error during conversion: {e.stderr.decode()}")
-    #     return None
         if docx_file and docx_file.name.endswith('.docx'):
-            # doc = Document(docx_file)
-            # html_content = []
-            # 
-            # # Get document relationships
-            # doc_rels = {
-            #     rid: rel.target_ref for rid, rel in doc.part.rels.items() 
-            #     if rel.reltype == RT.HYPERLINK
-            # }
-            #
-            # for paragraph in doc.paragraphs:
-            #     if not paragraph.text.strip():
-            #         continue
-            #
-            #     para_html = []
-            #     if paragraph._p.pPr.numPr is not None:
-            #         para_html.append('<li>')
-            #     else:
-            #         para_html.append('<p>')
-            #
-            #     # Process the paragraph's XML structure
-            #     for element in paragraph._element:
-            #         if element.tag.endswith('hyperlink'):
-            #             # Handle hyperlinks safely
-            #             rel_id = element.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
-            #             if rel_id and rel_id in doc_rels:
-            #                 url = doc_rels[rel_id]
-            #                 # Safer text extraction
-            #                 texts = []
-            #                 for run in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}r'):
-            #                     t_element = run.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
-            #                     if t_element is not None and t_element.text:
-            #                         texts.append(html.escape(t_element.text))
-            #                 
-            #                 hyperlink_text = ''.join(texts)
-            #                 if hyperlink_text:  # Only add if we have text
-            #                     para_html.append(f'<a href="{url}">{hyperlink_text}</a>')
-            #         elif element.tag.endswith('r'):
-            #             # Handle regular runs
-            #             run_text = ''.join(
-            #                 html.escape(child.text or '') 
-            #                 for child in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
-            #             )
-            #             # Apply formatting
-            #             rPr = element.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rPr')
-            #             if rPr is not None:
-            #                 if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}b') is not None:
-            #                     run_text = f'<strong>{run_text}</strong>'
-            #                 if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}i') is not None:
-            #                     run_text = f'<em>{run_text}</em>'
-            #             para_html.append(run_text)
-            #
-            #     if paragraph._p.pPr.numPr is not None:
-            #         para_html.append('</li>')
-            #     else:
-            #         para_html.append('</p>')
-            #
-            #     html_content.append(''.join(para_html))
-            # 
-            # resume_text = '\n\n'.join(html_content)
-            # # print(f"Custom conversion done: {resume_text[:500]}...")
-            #
-            # return resume_text
             doc = Document(docx_file)
             html_content = []
             
-            # Get document relationships
             doc_rels = {
                 rid: rel.target_ref for rid, rel in doc.part.rels.items() 
                 if rel.reltype == RT.HYPERLINK
             }
             
-            # Check if we're inside a list
             in_list = False
             list_items = []
             
             for paragraph in doc.paragraphs:
                 if not paragraph.text.strip() and not in_list:
-                    # Add empty paragraphs to preserve spacing
                     html_content.append('<p><br></p>')
                     continue
 
-                # Determine paragraph style and indentation
                 is_list_item = paragraph._p.pPr is not None and paragraph._p.pPr.numPr is not None
                 
-                # Handle list items
                 if is_list_item:
                     if not in_list:
                         in_list = True
                         list_items = []
                     
-                    # Process list item content
                     item_content = []
                     
-                    # Process the paragraph's XML structure
                     for element in paragraph._element:
                         if element.tag.endswith('hyperlink'):
-                            # Handle hyperlinks safely
                             rel_id = element.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
                             if rel_id and rel_id in doc_rels:
                                 url = doc_rels[rel_id]
-                                # Safer text extraction
                                 texts = []
                                 for run in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}r'):
                                     t_element = run.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
@@ -271,12 +188,10 @@ def convert_docx_to_html(docx_file):
                                 if hyperlink_text:  # Only add if we have text
                                     item_content.append(f'<a href="{url}">{hyperlink_text}</a>')
                         elif element.tag.endswith('r'):
-                            # Handle regular runs
                             run_text = ''.join(
                                 html.escape(child.text or '') 
                                 for child in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
                             )
-                            # Apply formatting
                             rPr = element.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rPr')
                             if rPr is not None:
                                 if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}b') is not None:
@@ -287,23 +202,18 @@ def convert_docx_to_html(docx_file):
                     
                     list_items.append(''.join(item_content))
                 
-                # End list if we're transitioning out
                 elif in_list:
                     html_content.append('<ul>\n' + '\n'.join([f'<li>{item}</li>' for item in list_items]) + '\n</ul>')
                     list_items = []
                     in_list = False
                     
-                    # Now process the current paragraph (non-list)
                     para_html = ['<p>']
                     
-                    # Process the paragraph's XML structure
                     for element in paragraph._element:
                         if element.tag.endswith('hyperlink'):
-                            # Handle hyperlinks safely
                             rel_id = element.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
                             if rel_id and rel_id in doc_rels:
                                 url = doc_rels[rel_id]
-                                # Safer text extraction
                                 texts = []
                                 for run in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}r'):
                                     t_element = run.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
@@ -314,12 +224,10 @@ def convert_docx_to_html(docx_file):
                                 if hyperlink_text:  # Only add if we have text
                                     para_html.append(f'<a href="{url}">{hyperlink_text}</a>')
                         elif element.tag.endswith('r'):
-                            # Handle regular runs
                             run_text = ''.join(
                                 html.escape(child.text or '') 
                                 for child in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
                             )
-                            # Apply formatting
                             rPr = element.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rPr')
                             if rPr is not None:
                                 if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}b') is not None:
@@ -332,17 +240,13 @@ def convert_docx_to_html(docx_file):
                     html_content.append(''.join(para_html))
                 
                 else:
-                    # Regular paragraph processing
                     para_html = ['<p>']
                     
-                    # Process the paragraph's XML structure
                     for element in paragraph._element:
                         if element.tag.endswith('hyperlink'):
-                            # Handle hyperlinks safely
                             rel_id = element.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
                             if rel_id and rel_id in doc_rels:
                                 url = doc_rels[rel_id]
-                                # Safer text extraction
                                 texts = []
                                 for run in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}r'):
                                     t_element = run.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
@@ -353,12 +257,10 @@ def convert_docx_to_html(docx_file):
                                 if hyperlink_text:  # Only add if we have text
                                     para_html.append(f'<a href="{url}">{hyperlink_text}</a>')
                         elif element.tag.endswith('r'):
-                            # Handle regular runs
                             run_text = ''.join(
                                 html.escape(child.text or '') 
                                 for child in element.findall('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
                             )
-                            # Apply formatting
                             rPr = element.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rPr')
                             if rPr is not None:
                                 if rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}b') is not None:
@@ -370,7 +272,6 @@ def convert_docx_to_html(docx_file):
                     para_html.append('</p>')
                     html_content.append(''.join(para_html))
 
-            # Flush any remaining list items
             if in_list and list_items:
                 html_content.append('<ul>\n' + '\n'.join([f'<li>{item}</li>' for item in list_items]) + '\n</ul>')
             
@@ -382,27 +283,20 @@ def convert_docx_to_html(docx_file):
         print(f"An unexpected error occurred: {e}")
         return None
 
-# Process the uploaded CV and convert it to HTML
 def process_uploaded_file(request, file_id):
     """Processes the uploaded CV and converts to HTML."""
     job_application = JobApplication.objects.get(id=file_id)
     file_path = job_application.uploaded_file.path
-    job_description = job_application.job_description # Retrieve job description from model
+    job_description = job_application.job_description
 
     try:
         with open(file_path, 'rb') as file:
             html_content = convert_docx_to_html(file)
         if html_content is None:
-            # Handle the case where conversion failed
             return HttpResponse("Error converting the document.", status=500)
-
-        # Read the content of the HTML file
-        # with open(html_file, 'r') as f:
-        #     html_content = f.read()
 
         sections = {"CV Content": html_content}
 
-        # Render the HTML content in your preview page
         return render(request, 'preview.html', {
             'sections': sections,
             'job_description': job_description
@@ -413,15 +307,12 @@ def process_uploaded_file(request, file_id):
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
 
-# View to convert the CV to ATS format
 def convert_to_ats_format(request):
     if request.method == "POST":
         try:
-            # Get the CV and job description from the POST request
             cv_content = request.POST.get("cv_content")
             job_description = request.POST.get("job_description")
 
-            # Generate ATS-friendly content using OpenAI
             ats_cv_content, match_score, suggestions = generate_ats_format_and_match_score(cv_content, job_description)
 
             return JsonResponse({
@@ -433,10 +324,8 @@ def convert_to_ats_format(request):
         except Exception as e:
             return JsonResponse({'error': f"An error occurred: {str(e)}"}, status=500)
 
-# Helper function to call OpenAI API for ATS format conversion
 def generate_ats_format_and_match_score(cv_content, job_description):
     try:
-        # Create a prompt for OpenAI
         prompt = (
             f"First, proofread the following CV content, then convert it to an ATS-friendly format as possible without removing personal data like name, address, email, contact info, and other identifying details that would normally not be in an ATS-friendly CV. Let there be no omissions or missing parts, meaning do not remove any sections containing personal information or contact information. Then proofread and edit the content to remove all typographical errors."
             f"Section titles/headings in the CV content might be capitalized. If the section titles/headings are not in capital letters, then capitalize them. Separate all sections with an empty line only, not with commas or separators. All sections in CV content must be present in the ATS-friendly format, including all responsibilities under each work experience entry. Ensure no sections or responsibilities are missing in the ATS-friendly format."
@@ -457,8 +346,6 @@ def generate_ats_format_and_match_score(cv_content, job_description):
             f"Job Description: {job_description}\n"
 )
 
-
-        # Call OpenAI API to generate ATS content
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
@@ -466,43 +353,22 @@ def generate_ats_format_and_match_score(cv_content, job_description):
             ],
         )
 
-        # Print the raw response for debugging
-        # print("OpenAI Response:", response)
-
-        # Extract ATS content from the response
         ats_content = response.choices[0].message.content
 
-        suggestions = extract_suggestions(ats_content)  # Function to extract suggestions from the response
-        # print(suggestions)
-
-        # print("Extracted Suggestions:", suggestions)
-        # print("---")
-        # Assuming the match score is provided as a number at the end of the content
+        suggestions = extract_suggestions(ats_content)
         match_score_match = re.search(r'Match Score:\s*(\d+)\s*/\s*100', ats_content, re.IGNORECASE)
         if match_score_match:
-            match_score = match_score_match.group(1)  # Extract the match score
-            ats_content = ats_content[:match_score_match.start()].strip()  # Remove the score from the content
+            match_score = match_score_match.group(1)
+            ats_content = ats_content[:match_score_match.start()].strip()
         else:
-            match_score = "N/A"  # Fallback if no score is found
+            match_score = "N/A"
 
-        # print("Match score is", match_score_match)
-        # print("---")
-        # print("ATS Content is", ats_content)
-        # print("---")
-
-        # Apply formatting changes: replace asterisks with simple headings
         ats_content = apply_custom_formatting(ats_content)
 
-        # Apply basic formatting (e.g., replacing newlines with <br> for HTML display)
-        # formatted_ats_content = ats_content.replace("\n", "<br>")
-        # formatted_ats_content = re.sub(r'\n\n+', '</p><p>', ats_content.replace("\n", "<br>"))
-        # formatted_ats_content = ats_content.replace('\n', '<br>')
-        # formatted_ats_content = f"<div>{formatted_ats_content}</div>"  # Wrap in paragraph tags
         formatted_ats_content = format_for_quill(ats_content)
         return formatted_ats_content, match_score, suggestions
 
     except Exception as e:
-        # Handle any potential errors from OpenAI or the prompt
         print(f"Error generating ATS content and match score: {e}")
         return "Error generating ATS content", "N/A"
 
@@ -511,19 +377,16 @@ def format_for_quill(content):
     Format text to be displayed properly in the Quill editor.
     Preserves paragraphs, line breaks, and lists.
     """
-    # Identify list items (lines starting with - or *)
     lines = content.split('\n')
     html_lines = []
     in_list = False
-    list_type = None  # 'ul' for unordered, 'ol' for ordered
+    list_type = None
     list_items = []
 
     for line in lines:
         line = line.strip()
-        # Handle empty lines as paragraph breaks
         if not line:
             if in_list:
-                # Close the appropriate list type
                 html_lines.append(f'<{list_type}>\n' + '\n'.join([f'<li>{item}</li>' for item in list_items]) + f'\n</{list_type}>')
                 list_items = []
                 in_list = False
@@ -531,35 +394,30 @@ def format_for_quill(content):
             html_lines.append('<p><br></p>')
             continue
         
-        # Check for list items - unordered
         if line.startswith('-') or line.startswith('•') or line.startswith('*'):
             if not in_list:
                 in_list = True
-                list_type = 'ul'  # Set list type to unordered
-            item_text = line[1:].strip()  # Remove the bullet character
+                list_type = 'ul'
+            item_text = line[1:].strip()
             list_items.append(item_text)
-        # Check for list items - ordered (starts with number followed by period or parenthesis)
         elif re.match(r'^\d+[\.\)]', line):
             if not in_list:
                 in_list = True
                 list_type = 'ol'  # Set list type to ordered
-            item_text = re.sub(r'^\d+[\.\)]\s*', '', line)  # Remove the number and delimiter
+            item_text = re.sub(r'^\d+[\.\)]\s*', '', line)
             list_items.append(item_text)
         else:
-            # End any ongoing list
             if in_list:
                 html_lines.append(f'<{list_type}>\n' + '\n'.join([f'<li>{item}</li>' for item in list_items]) + f'\n</{list_type}>')
                 list_items = []
                 in_list = False
                 list_type = None
             
-            # Check if line is a section header (all caps or starts with capital letter)
             if line.isupper() or (line[0].isupper() and ':' in line):
                 html_lines.append(f'<h3>{line}</h3>')
             else:
                 html_lines.append(f'<p>{line}</p>')
     
-    # Handle any remaining list items
     if in_list:
         html_lines.append(f'<{list_type}>\n' + '\n'.join([f'<li>{item}</li>' for item in list_items]) + f'\n</{list_type}>')
     
@@ -572,17 +430,17 @@ def apply_custom_formatting(content):
     and replace bullet points with dashes.
     """
 
-    # Convert lines like **PROFILE SUMMARY** into PROFILE SUMMARY
+    # Converts lines like **PROFILE SUMMARY** into PROFILE SUMMARY
     content = re.sub(r'\*\*(.*?)\*\*', r'\n\1\n', content)
 
-    # Replace bullet points (asterisks or other symbols) with dashes
+    # Replaces bullet points (asterisks or other symbols) with dashes
     content = content.replace('•', '-').replace('*', '-')
 
-    # Remove empty line at the top of the text, if it exists
+    # Removes empty line at the top of the text, if it exists
     content = re.sub(r'^\s*\n', '', content)
 
-    # Optionally, remove excess newlines
-    content = re.sub(r'\n\s*\n', '\n\n', content)  # Removes extra newlines but keeps paragraph spacing
+    # Removes excess newlines but keeps paragraph spacing
+    content = re.sub(r'\n\s*\n', '\n\n', content)
 
     return content
 
@@ -666,10 +524,8 @@ def download_docx(request):
 """
 
 def download_pdf(request):
-    # Get the tailored CV content from the request
     cv_content = request.POST.get('cv_content', '')
     
-    # Wrap the content in proper HTML structure
     html_document = f"""
     <!DOCTYPE html>
     <html>
@@ -688,7 +544,6 @@ def download_pdf(request):
     </html>
     """
 
-    # Convert HTML to PDF using pdfkit with proper options
     pdf = pdfkit.from_string(html_document, False, options={
         'encoding': "UTF-8",
         'quiet': '',
@@ -698,7 +553,6 @@ def download_pdf(request):
         'margin-left': '20mm',
     })
 
-    # Create an HTTP response with the PDF file
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="tailored_cv.pdf"'
 
@@ -716,7 +570,6 @@ def implement_suggestion(request):
         f"Just give me all the CV text (including all the modifications) ONLY in your response."
     )
 
-    # Call OpenAI API to implement suggestion in CV text.
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -747,10 +600,9 @@ def highlight_changes(original_text: str, modified_text: str) -> str:
     """
     highlighted_text = ""
     diff = ndiff(original_text.split(), modified_text.split())
-    change_id = 0 # Unique ID for each change
+    change_id = 0
 
     for token in diff:
-        # Tokens prefixed w/ "+" are additions in modified_text
         if token.startswith("+ "):
             highlighted_text += (
                 f'<span class="highlighted-change" id="change-{change_id}">'
@@ -759,13 +611,10 @@ def highlight_changes(original_text: str, modified_text: str) -> str:
                 f'<button onclick="rejectChange(\'change-{change_id}\')">Reject</button>'
                 f'</span> '
             )
-            # Generate a unique ID for each change span
             change_id += 1
         elif token.startswith("- "):
-            # Ignore deletions from original_text
             continue
         else:
-            # Tokens that are the same in both texts
             highlighted_text += token[2:] + " "
 
     return highlighted_text.strip()

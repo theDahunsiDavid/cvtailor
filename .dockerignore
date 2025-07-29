@@ -3,8 +3,11 @@ venv
 __pycache__
 *.pyc
 *.pyo
+*.pyd
 *.log
 .env
 ./cvtailor_project/.env
 db.sqlite3
 .git
+.gitignore
+media/

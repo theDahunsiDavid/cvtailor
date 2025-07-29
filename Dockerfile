@@ -1,6 +1,6 @@
-FROM python:3.12.7-slim-bullseye
+FROM python:3.9-slim
 
-# Install system dependencies
+# Install system dependencies & needed packages
 RUN apt-get update && \
 		apt-get install -y wkhtmltopdf libreoffice && \
 		apt-get install -y libxrender1 libxext6 libfontconfig1 && \
@@ -8,19 +8,26 @@ RUN apt-get update && \
 		apt-get clean && \
 		rm -rf /var/lib/apt/lists/*
 
-# Set up Python environment
-ENV PYTHONBUFFERED=1
+# Set up Python environment & environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV DEBUG 0
 
-ENV PORT 8000
-
+# Set work directory
 WORKDIR /app
 
-COPY . /app/
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-RUN pip install --upgrade pip
+# Copy project
+COPY . .
 
-RUN pip install -r requirements.txt
+# Add a default SECRET_KEY for collectstatic (not used in production)
+ENV SECRET_KEY=build_secret_key_not_used_in_production
 
-CMD gunicorn server.wsgi:application --bind 0.0.0.0:"${PORT}"
+# Collect static files
+RUN python manage.py collectstatic --noinput
 
-EXPOSE ${PORT}
+# Run gunicorn
+CMD gunicorn cvtailor_project.wsgi:application --bind 0.0.0.0:${PORT}
